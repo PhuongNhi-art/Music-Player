@@ -1,6 +1,5 @@
 import React from  'react';
 import {View, Image, Text, FlatList} from 'react-native';
-import { color } from 'react-native-reanimated';
 import {Album, AlbumCategory} from '../../types';
 import AlbumItem from '../Album';
 import styles from './styles';

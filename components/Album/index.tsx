@@ -5,11 +5,10 @@ import {
     Text,
     TouchableWithoutFeedback
 } from 'react-native';
-import { color } from 'react-native-reanimated';
 import styles from './styles';
 import { Album } from '../../types';
 import { useNavigation } from '@react-navigation/core';
-import Navigation from '../../navigation';
+
 export type AlbumProps = {
     album: Album
 
@@ -33,7 +32,3 @@ const AlbumItem = (props: AlbumProps) => {
     );
 }
 export default AlbumItem;
-
-function id(arg0: string, id: any, album: Album) {
-    throw new Error('Function not implemented.');
-}

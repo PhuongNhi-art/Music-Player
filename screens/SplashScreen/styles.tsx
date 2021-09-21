@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
     container: {
       backgroundColor: '#1A0938',
       flex: 1,
-      justifyContent: 'flex-start',
+      justifyContent: 'center',
       alignItems: 'center'
     },
     image: {
@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
       height: 150,
     },
     title: {
-      
+      marginTop: 12,
       fontSize: 24,
       color: '#ED1BA3',
       // fontFamily: Fonts.type.black,
