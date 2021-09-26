@@ -1,25 +1,32 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, StatusBar, } from 'react-native';
+import { Text, 
+  View, 
+  StyleSheet, 
+  StatusBar,
+  Button } from 'react-native';
 
 import { Image } from 'react-native';
 import styles from './styles';
-import PlayButton from '../../components/PlayButton';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/core';
 
 const SplashScreen = () =>{
   const navigation = useNavigation();
-  const onPress = () => {
-    navigation.navigate('SignupScreen');
-  }
   return (
     <View style={styles.container}>
         <StatusBar barStyle='light-content'/>
         <Image source={require( '../../assets/images/logo.png')} style={styles.image}  />
         <Text style={styles.title}>LIFEMUSIC</Text>
         <Text style= {styles.text}>Music is not an entertainment, but also it is our life</Text>
-        <View style={{paddingTop: 100}}>
-        <TouchableOpacity onPress={onPress}><PlayButton/></TouchableOpacity>
+        <View style={{paddingTop: 50, alignItems: 'center'}}>
+          <TouchableHighlight style={styles.buttonRegister}
+          onPress={()=>navigation.navigate('SignupScreen')}>
+            <Text style={styles.textRegister}>
+              REGISTER
+            </Text>
+          </TouchableHighlight>
+          <TouchableOpacity onPress={()=>navigation.navigate('SigninScreen')}>
+            <Text style={styles.textLogin}>Login</Text></TouchableOpacity>
         </View>
 
     </View>

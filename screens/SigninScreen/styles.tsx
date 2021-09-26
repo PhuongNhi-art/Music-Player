@@ -1,28 +1,27 @@
 import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#E2DCED',
+        backgroundColor: '#1A0938',
         flex: 1,
         // justifyContent: 'center',
         alignItems: 'center',
+        
 
     },
     logo: {
         flexDirection: 'row',
-        marginTop: 10,
-        
+        marginTop: 15,
        
     },
     imageLogo: {
-        height: 70,
-        width: 70,
+        height: 60,
+        width: 60,
         paddingBottom: 8,
-        marginTop: 20,
     },
     textLogo: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
-        color: '#1A0938',
+        color: '#FFFFFF',
         padding: 8,
     },
     loginSection: {
@@ -31,10 +30,11 @@ const styles = StyleSheet.create({
         
     },
     textTitle: {
-        color: '#1A0938',
+        color: '#ED1BA3',
         fontSize: 28,
         fontWeight: 'bold',
         paddingVertical: 20,
+        marginBottom: 30,
     },
     input:{
         backgroundColor: '#361E60',
@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     },
     // inputPassword: {
     //     backgroundColor: '#361E60',
-    //     color: '#A7A7A7',
-    //     fontSize: 20,
+    //     color: 'white',
+    //     fontSize: 14,
     //     paddingBottom: 10,
     //     paddingLeft: 15,
     //     borderRadius: 40,
@@ -73,14 +73,15 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         margin: 10,
         fontWeight: 'bold',
-        fontSize: 20,
+        fontSize: 18,
       },
       textRegister: {
         marginTop: 10,
         fontWeight: 'bold',
         textDecorationLine: 'underline',
-        fontSize: 20,
-        color: 'black'
+        fontSize: 18,
+        color: '#A7A7A7',
+        // color: 'white'
       }
       
 });
