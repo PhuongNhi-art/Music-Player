@@ -39,9 +39,8 @@ const styles = StyleSheet.create({
     input:{
         backgroundColor: '#361E60',
         color: 'white',
-        fontSize: 16,
-        paddingBottom: 10,
-        paddingLeft: 15,
+        fontSize: 14,
+        padding: 10,
         borderRadius: 40,
         width: 315,
         height: 60,
@@ -49,18 +48,24 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         
     },
-    // inputPassword: {
-    //     backgroundColor: '#361E60',
-    //     color: 'white',
-    //     fontSize: 14,
-    //     paddingBottom: 10,
-    //     paddingLeft: 15,
-    //     borderRadius: 40,
-    //     width: 315,
-    //     height: 60,
+    textInput:{
+        flex: 1,
+        color: 'white'
+
+    },
+    inputPassword: {
+        backgroundColor: '#361E60',
+        color: 'white',
+        fontSize: 14,
+        padding: 10,
+        borderRadius: 40,
+        width: 315,
+        height: 60,
+        // flex: 1,
         
-    //     marginBottom: 10,
-    // },
+        flexDirection: 'row',
+        marginBottom: 10,
+    },
     buttonLogin: {
         backgroundColor: '#ED1BA3',
         borderRadius: 50,
@@ -79,7 +84,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontWeight: 'bold',
         textDecorationLine: 'underline',
-        fontSize: 18,
+        fontSize: 16,
         color: '#A7A7A7',
         // color: 'white'
       }

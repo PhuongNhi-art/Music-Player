@@ -10,12 +10,64 @@ import {
   TouchableHighlight,
   TouchableOpacity
 } from 'react-native';
+import {useState} from 'react';
 
 import styles from './styles';
-
-
+// import Loader from '../../components/Loader';
+import AppUrl from '../../utils/AppUrl';
+import { Entypo } from '@expo/vector-icons'; 
+import Feather from 'react-native-vector-icons/Feather';
+// import { useToast } from 'native-base';
 const SigninScreen = () => {
   const navigation = useNavigation();
+  // const toast = useToast()
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [hiddenPassword, setHiddenPassword] = useState<boolean>(true);
+  const updateHiddenPassword = ()=>{
+    setHiddenPassword(!hiddenPassword);
+  }
+  const onSubmit = async() => {
+    try {
+      const response = await fetch(AppUrl.LOGIN, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+         email: email,
+         password: password,
+        })
+      });
+      const json = await response.json();
+      // if (response.status==200){
+      //   toast.show({title: 'Login success', placement: 'bottom',backgroundColor: 'pink.400'})
+      //   console.log('login success');
+      // }
+      // else {
+      //   toast.show({description: json['message']});
+      //   console.log('login failed');
+      // }
+    } catch (error) {
+      
+    }}
+  //   await fetch(AppUrl.LOGIN, {
+  //     method: 'POST',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //      email: email,
+  //      password: password,
+  //     })
+  //   }).then(res=> res.json())
+  //   .then(resData => {
+  //     alert(resData.message);
+  //     console.log(resData);
+  //   });
+  // }
   return (
 
     <View style={styles.container}>
@@ -32,17 +84,43 @@ const SigninScreen = () => {
             <TextInput style={styles.input}
               placeholder='Email' placeholderTextColor='#A7A7A7'
               keyboardType='email-address'
+              onChangeText = {(value)=> setEmail(value)}
             />
-            <TextInput style={styles.input}
+            <View style={styles.inputPassword}>
+            <TextInput style={styles.textInput}
+              secureTextEntry={hiddenPassword}
+              autoCapitalize="none"
               placeholder='Password'
               placeholderTextColor='#A7A7A7'
-              keyboardType='visible-password'
+              // keyboardType='visible-password'
+            
+              onChangeText={(value)=> setPassword(value)}
             />
+            <TouchableOpacity onPress={updateHiddenPassword}
+                    
+                >
+                    {hiddenPassword?
+                    <Feather 
+                    style={{padding: 10}}
+                        name="eye-off"
+                        color="grey"
+                        size={20}
+                    />
+                     :
+                    <Feather 
+                    style={{padding: 10}}
+                        name="eye"
+                        color="grey"
+                        size={20}
+                    />}
+                    
+                </TouchableOpacity>
+            </View>
           </View>
         </View>
         <View style={{ alignItems: 'center' }}>
 
-          <TouchableHighlight style={styles.buttonLogin}
+          <TouchableHighlight style={styles.buttonLogin} onPress={onSubmit}
           >
             <Text style={styles.textLogin}>
               LOGIN
@@ -50,8 +128,10 @@ const SigninScreen = () => {
           </TouchableHighlight>
           <TouchableOpacity onPress={() => navigation.navigate('SignupScreen')}>
             <Text style={styles.textRegister}>Register</Text></TouchableOpacity>
+            
         </View></View>
     </View>
   );
 }
 export default SigninScreen;
+

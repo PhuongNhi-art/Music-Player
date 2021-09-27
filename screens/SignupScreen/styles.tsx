@@ -4,13 +4,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#E2DCED',
         flex: 1,
         // justifyContent: 'center',
-        alignItems: 'center',
+       
 
     },
     logo: {
         flexDirection: 'row',
         marginTop: 10,
-        
+        // alignItems: 'center',
+        // alignContent: 'center',
+        justifyContent: 'center'
+       
        
     },
     imageLogo: {
@@ -36,17 +39,40 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         paddingVertical: 20,
     },
-    input:{
+    textPassword: {
+        flex: 1,
+        // backgroundColor: '#361E60'
+        color: 'white'
+    },
+    inputPassword: {
+        flexDirection: 'row',
+        marginBottom: 10,
         backgroundColor: '#361E60',
         color: 'white',
-        fontSize: 16,
-        paddingBottom: 10,
-        paddingLeft: 15,
+        fontSize: 14,
+        padding: 10,
         borderRadius: 40,
         width: 315,
         height: 60,
+    },
+    input:{
+        // backgroundColor: '#361E60',
+        // color: 'white',
+        // fontSize: 14,
+        // paddingBottom: 10,
+        // paddingLeft: 15,
+        // borderRadius: 40,
+        // width: 315,
+        // height: 60,
         
         marginBottom: 10,
+        backgroundColor: '#361E60',
+        color: 'white',
+        fontSize: 14,
+        padding: 10,
+        borderRadius: 40,
+        width: 315,
+        height: 60,
         
     },
     // inputPassword: {
