@@ -42,6 +42,7 @@ const Colors = {
   text: 'rgb(28, 28, 30)',
 
   linearGradient1: ['#D91193','#22DDF2'],
+  linearGradient3: ['#22DDF2','#1A0938'],
   linearGradient2: ['#22DDF2','#D91193'],
 
   transparent: 'rgba(0,0,0,0)',

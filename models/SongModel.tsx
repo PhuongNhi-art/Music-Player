@@ -1,7 +1,13 @@
 type Song = {
-    id: string,
+    _id: string,
+    name: string,
     imageUri : string,
-    title: string,
-    artist: string,
+    description: string,
+    uri: string,
+    numberOfLikes : number,
+    
+    
+    artists: string,
+
 }
 export default Song;

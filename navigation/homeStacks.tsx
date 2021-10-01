@@ -6,6 +6,8 @@ import SigninScreen from '../screens/SigninScreen';
 import AlbumScreen from '../screens/AlbumScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import BottomTabNavigator from './bottomStacks';
+import HomeScreen from '../screens/HomeScreen';
+import SongScreen from '../screens/SongScreen';
 import PlayerScreen from '../screens/PlayerScreen';
 
 
@@ -17,43 +19,31 @@ import PlayerScreen from '../screens/PlayerScreen';
 const Stack = createStackNavigator();
 
 
-const Stacks = () => (
+const HomeStacks = () => (
   <Stack.Navigator initialRouteName="SplashScreen">
     <Stack.Screen
-      name="SplashScreen"
-      component={SplashScreen}
+      name="HomeScreen"
+      component={HomeScreen}
       options={{
         headerShown: false,
       }}
     />
     <Stack.Screen
-      name="SigninScreen"
-      component={SigninScreen}
+      name="AlbumScreen"
+      component={AlbumScreen}
       options={{
         headerShown: false,
       }}
     />
-    <Stack.Screen
-      name="SignupScreen"
-      component={SignupScreen}
-      options={{
-        headerShown: false,
-      }}
-    />
-    <Stack.Screen
-       name="Root" 
-      component={BottomTabNavigator} 
-      options={{
-        headerShown: false,}}/>
-    <Stack.Screen
+      {/* <Stack.Screen
       name="PlayerScreen"
       component={PlayerScreen}
       options={{
         headerShown: false,
       }}
-    />
+    /> */}
     
   </Stack.Navigator>
 );
 
-export default Stacks;
+export default HomeStacks;

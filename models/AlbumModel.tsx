@@ -1,9 +1,12 @@
+import Song from "./SongModel";
+
 type Album = {
-    id: string;
+  _id: string;
   name: string;
-  by: string;
-  numberOfLikes: number;
   imageUri: string;
+  description: string;
+  numberOfLikes: number;
   artistsHeadline: string;
+  songs: Song[];
 }
 export default Album;

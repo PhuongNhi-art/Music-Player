@@ -4,12 +4,12 @@ const styles = StyleSheet.create({
         margin: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        width: 50,
-        height: 50,
+        width: 72,
+        height: 72,
     },
     image: {
-        width: 30,
-        height: 30,
+        width: 40,
+        height: 40,
         position: 'relative',
         zIndex: 1
         // justifyContent: 'flex-end',
@@ -18,9 +18,9 @@ const styles = StyleSheet.create({
     circle: {
         position: 'absolute',
         opacity: 0.5,
-        width: 45,
-        height: 45,
-        borderRadius: 50,
+        width: 66,
+        height: 65,
+        borderRadius: 65/2,
 
     }
 

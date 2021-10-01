@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     headerSection: {
         marginHorizontal: 12,
-        marginVertical: 24,
+        marginVertical: 10,
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row'
@@ -11,16 +11,16 @@ const styles = StyleSheet.create({
     },
     musicSection: {
         marginHorizontal: 0,
-        marginVertical: 24,
+        marginVertical: 10,
         justifyContent: 'center',
         alignItems: 'center',
     },
     imagePlayer: {
-        borderRadius: 200/2,
-        height: 200,
-        width: 200,
+        borderRadius: 250/2,
+        height: 250,
+        width: 250,
         marginHorizontal: 81,
-        marginVertical: 60
+        marginVertical: 20
 
     },
     containerTitle:{

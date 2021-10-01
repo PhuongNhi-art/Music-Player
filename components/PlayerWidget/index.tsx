@@ -33,7 +33,7 @@ const PlayerWidget = () => {
             await sound.unloadAsync()
         }
         const { sound: newSound } = await Audio.Sound.createAsync(
-            { uri: 'https://raw.githubusercontent.com/zmxv/react-native-sound-demo/master/frog.wav' },
+            { uri: 'https://www.dropbox.com/s/uf38gm3bjm948zu/VayGiu-VuongTinhVanKhongMap-6952041.mp3?dl=1' },
             { shouldPlay: isPlaying },
             onPlayBackStatusUpdate
         )

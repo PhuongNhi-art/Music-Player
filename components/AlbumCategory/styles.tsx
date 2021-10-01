@@ -9,6 +9,8 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 20,
         fontWeight: "bold",
+        // marginHorizontal: 5,
+        // marginBottom: 10,
         margin: 10,
     },
 

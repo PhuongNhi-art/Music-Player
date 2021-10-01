@@ -17,7 +17,8 @@ import styles from './styles';
 import AppUrl from '../../utils/AppUrl';
 import { Entypo } from '@expo/vector-icons'; 
 import Feather from 'react-native-vector-icons/Feather';
-// import { useToast } from 'native-base';
+// import { Toast } from 'native-base';
+import Toast from 'react-native-simple-toast';
 const SigninScreen = () => {
   const navigation = useNavigation();
   // const toast = useToast()
@@ -41,14 +42,16 @@ const SigninScreen = () => {
         })
       });
       const json = await response.json();
-      // if (response.status==200){
-      //   toast.show({title: 'Login success', placement: 'bottom',backgroundColor: 'pink.400'})
-      //   console.log('login success');
-      // }
-      // else {
-      //   toast.show({description: json['message']});
-      //   console.log('login failed');
-      // }
+      if (response.status==200){
+       
+          Toast.show('Login success');
+        console.log('login success');
+        navigation.navigate('Root');
+      }
+      else {
+        Toast.show(json['message']);
+        console.log('login failed');
+      }
     } catch (error) {
       
     }}

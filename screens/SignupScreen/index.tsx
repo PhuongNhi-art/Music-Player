@@ -15,13 +15,15 @@ import { useState } from 'react';
 import styles from './styles';
 import Feather from 'react-native-vector-icons/Feather';
 import { useEffect, useRef } from 'react'
-
+import Toast from 'react-native-simple-toast';
+import AppUrl from '../../utils/AppUrl';
 const SignupScreen = () => {
   const messagesEndRef = useRef(null)
   const navigation = useNavigation();
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [repassword, setRePassword] = useState<string>('');
   const [hiddenPass, setHiddenPass] = useState<boolean>(true);
   const [hiddenRePass, setHiddenRePass] = useState<boolean>(true);
   const updateHiddenPassword = () => {
@@ -30,6 +32,36 @@ const SignupScreen = () => {
   const updateReHiddenPassword = () => {
     setHiddenRePass(!hiddenRePass)
   }
+  const onSubmit = async() => {
+    try {
+      const response = await fetch(AppUrl.REGISTER, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+         email: email,
+         password: password,
+         username: username,
+         repeat_password: repassword,
+        })
+      });
+      const json = await response.json();
+      if (response.status==200){
+       
+          Toast.show('Register successful');
+        console.log('Register successful');
+        // navigation.navigate('HomeScreen');
+        navigation.navigate('Root');
+      }
+      else {
+        Toast.show(json['message']);
+        console.log('register failed');
+      }
+    } catch (error) {
+      
+    }}
   return (
     
     <View style={styles.container}>
@@ -85,6 +117,7 @@ const SignupScreen = () => {
                 placeholder='Repeat password' placeholderTextColor='#A7A7A7'
                 secureTextEntry={hiddenRePass}
                 autoCapitalize="none"
+                onChangeText={(value)=> setRePassword(value)}
               />
               <TouchableOpacity onPress={updateReHiddenPassword}
 
@@ -109,7 +142,7 @@ const SignupScreen = () => {
           
         </View>
         <TouchableHighlight style={styles.buttonLogin}
-          onPress={() => navigation.navigate('SignupScreen')}>
+          onPress={onSubmit}>
           <Text style={styles.textLogin}>
             SIGN UP
           </Text>

@@ -8,10 +8,11 @@ const styles = StyleSheet.create({
     rightContainer: {
         justifyContent: 'space-around',
         marginLeft: 10,
+        flex: 3,
     },
     image: {
-        width: 75,
-        height: 75,
+        width: 50,
+        height: 50,
     },
     title: {
         color: 'white',
@@ -20,11 +21,21 @@ const styles = StyleSheet.create({
         // paddingTop: 5
 
     },
+
     artist : {
         color: 'lightgray',
         fontSize: 14,
         // paddingLeft: 5,
         // paddingTop: 5
+    },
+    lyrics: {
+        backgroundColor: 'gray',
+        height: 20,
+        width: 35,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 5,
     }
 
 });

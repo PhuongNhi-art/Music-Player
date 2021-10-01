@@ -27,6 +27,8 @@ const SplashScreen = () =>{
           </TouchableHighlight>
           <TouchableOpacity onPress={()=>navigation.navigate('SigninScreen')}>
             <Text style={styles.textLogin}>Login</Text></TouchableOpacity>
+            <TouchableOpacity onPress={()=>navigation.navigate('Root')}>
+            <Text style={styles.textLogin}>Next</Text></TouchableOpacity>
         </View>
 
     </View>
