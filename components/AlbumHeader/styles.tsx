@@ -24,6 +24,9 @@ const styles = StyleSheet.create({
         left: 0,
         fontSize: 24,
         padding: 10,
+        textShadowColor: 'black', 
+    textShadowOffset: { width: -1, height: 0 },
+    textShadowRadius: 15, 
     },
     creator: {
         color: 'lightgray',

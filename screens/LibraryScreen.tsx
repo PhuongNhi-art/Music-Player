@@ -4,7 +4,7 @@ import { Text, View, StyleSheet, StatusBar, Image, FlatList, ScrollView } from '
 import Colors from '../constants/Colors';
 import { AntDesign } from '@expo/vector-icons';
 import { TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-
+import { FontAwesome } from '@expo/vector-icons';
 import { round } from 'react-native-reanimated';
 import albumCategory from '../data/albumCategory';
 import albumDetails from '../data/albumDetails';
@@ -13,16 +13,83 @@ import { Album } from '../types';
 import { isTemplateElement } from '@babel/types';
 import PlayMusicWidget from '../components/PlayMusicWidget';
 import PlayButton from '../components/PlayButton';
+import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
+import { Toast } from 'native-base';
+import AppUrl from '../utils/AppUrl';
+import Song from '../models/SongModel';
 const LibraryScreen = () => {
+  const [dataArtists, setDataArtists] = useState();
+  const [dataSongs, setDataSongs] = useState<Array<Song>>([]);
+  const getListArtist = async() => {
+    try {
+      
+      const response = await fetch(AppUrl.getAllArtists, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+      });
+      
+      const json = await response.json();
+      if (response.status==200){
+       
+        setDataArtists(json['message']);
+        // console.log('data',dataCategories);
+        console.log('loading artist successful');
+        // navigation.navigate('HomeScreen');
+      }
+      else {
+        Toast.show(json['message']);
+        console.log('loading artist failed');
+      }
+    } catch (error) {
+      
+    }
+  }
+  const getListSong = async() => {
+    try {
+      
+      const response = await fetch(AppUrl.getAllSongs, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+      });
+      
+      const json = await response.json();
+      if (response.status==200){
+       
+        setDataSongs(json['message']);
+        // console.log('data',dataCategories);
+        console.log('loading artist successful');
+        // navigation.navigate('HomeScreen');
+      }
+      else {
+        Toast.show(json['message']);
+        console.log('loading artist failed');
+      }
+    } catch (error) {
+      
+    }
+  }
+  useEffect(()=>{
+    getListArtist();
+    getListSong();
+    return ()=>{
 
+    }
+  },[])
   const RenderItem = (props: any) => {
 
     return (
       <View style={styles.containerItem}>
-        <Image source={{ uri: props.albums.imageUri }} style={styles.image} />
+        <Image source={{ uri: props.type.imageUri }} style={styles.image} />
         <View style={styles.rightContainer}>
-          <Text style={styles.title}>{props.albums.title}</Text>
-          <Text style={styles.artist}>{props.albums.title}</Text>
+          <Text style={styles.title}>{props.type.name}</Text>
+          {/* <Text style={styles.artist}>{props.albums.title}</Text> */}
         </View>
 
       </View>
@@ -31,14 +98,18 @@ const LibraryScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
+      <View style={{flexDirection: 'row'}}>
+      <FontAwesome name="user-circle-o" style={{paddingTop: 10,paddingLeft: 15,}} size={30} color="white" />
       <Text style={styles.text}>Library</Text>
+      <View style={{flexDirection: 'row', flex: 1, paddingTop: 15,paddingLeft: 15,}}>
+      <Ionicons name="ios-search-outline" size={22} color="white" style={{flex: 1}} />
+      <AntDesign name="plus" size={22} color="white"style={{flex: 1}}  />
+      </View>
+      </View>
       <View>
-        <View style={styles.search}>
-          <AntDesign name="search1" size={24} color="white" style={styles.icon} />
-          <TextInput placeholder='Song or artist'
-            placeholderTextColor='#A7A7A7' style={styles.placeholder} /></View>
+        
         <View style={styles.titleSection}>
-          <Text style={styles.textTitle}>Playlists</Text>
+          <Text style={styles.textTitle}>Artists</Text>
           <TouchableWithoutFeedback onPress={() => console.log('Go to Playlist page')}>
             <AntDesign name="right" size={24} color="#22DDF2" />
           </TouchableWithoutFeedback>
@@ -46,11 +117,11 @@ const LibraryScreen = () => {
       </View>
       <View style={{ padding: 5, }}>
         <FlatList
-          data={albumCategory}
+          data={dataArtists}
           horizontal
           showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => <RenderItem albums={item} />}
-          keyExtractor={(item) => item.id} />
+          renderItem={({ item }) => <RenderItem type={item} />}
+          keyExtractor={(item) => item._id} />
       </View>
 
       <View style={styles.titleSection}>
@@ -62,7 +133,7 @@ const LibraryScreen = () => {
       <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{}}>
 
-          {albumDetails.songs.map((item, index) => {
+          {dataSongs.map((item, index) => {
             return (
               <View style={styles.favoriteItemView} key={index}>
                 <View style={{ flexDirection: 'row' }}>
@@ -70,8 +141,8 @@ const LibraryScreen = () => {
                     <Image source={require('../assets/images/logo.png')} style={styles.musicIcon} />
                   </View>
                   <View style={styles.containerSong}>
-                    <Text style={styles.titleSong}>{item.title}hello</Text>
-                    <Text style={styles.artistSong}>{item.artist}</Text>
+                    <Text style={styles.titleSong}>{item.name}</Text>
+                    <Text style={styles.artistSong}>{item.idArtist.name}</Text>
                   </View>
 
                 </View><AntDesign name="hearto" size={24} color="#ED1BA3" />
@@ -82,8 +153,8 @@ const LibraryScreen = () => {
         </ScrollView>
       </View>
       <View style={styles.bottomSection}>
-        <PlayMusicWidget>
-          <View style={{
+        {/* <PlayMusicWidget/> */}
+          {/* <View style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignContent: 'center',
@@ -110,9 +181,9 @@ const LibraryScreen = () => {
               </View>
               
             </View><PlayButton />
-          </View>
+          </View> */}
 
-        </PlayMusicWidget>
+        {/* </PlayMusicWidget> */}
       </View>
     </View>
   );
@@ -137,7 +208,8 @@ const styles = StyleSheet.create({
 
   },
   text: {
-    fontSize: 28,
+    flex: 3,
+    fontSize: 24,
     color: '#ED1BA3',
     fontWeight: 'bold',
     paddingTop: 10,
@@ -166,6 +238,7 @@ const styles = StyleSheet.create({
   },
   titleSection: {
     marginHorizontal: 24,
+    paddingTop: 10,
     marginVertical: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -214,7 +287,7 @@ const styles = StyleSheet.create({
   },
   artistSong: {
     fontSize: 12,
-    color: 'white',
+    color: 'lightgray',
   },
   containerSong: {
     paddingLeft: 10,

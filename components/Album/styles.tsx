@@ -10,9 +10,14 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 155,
     },
-    text: {
-        color: 'grey',
+    textName: {
+        color: 'white',
         marginTop: 10
+    },
+    textArtist: {
+        color: 'gray',
+        marginTop: 3,
+        fontSize: 12,
     }
 
 });

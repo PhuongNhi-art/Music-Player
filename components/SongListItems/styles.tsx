@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 
     artist : {
         color: 'lightgray',
-        fontSize: 14,
+        fontSize: 13,
         // paddingLeft: 5,
         // paddingTop: 5
     },

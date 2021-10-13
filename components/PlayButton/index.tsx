@@ -10,7 +10,7 @@ const start = { x: 0, y: 0 };
 const end = { x: 1, y: 0 };
 const PlayButton = (props: any) => {
     const {play} = props;
-    console.log(play);
+    // console.log(play);
     return (
         
         <View style={styles.container}>

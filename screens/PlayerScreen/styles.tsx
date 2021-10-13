@@ -42,6 +42,11 @@ const styles = StyleSheet.create({
     sliderSection:{
         marginHorizontal: 24,
         marginVertical: 0,
+        flex: 1,
+        marginLeft: 10,
+        marginRight: 10,
+        alignItems: "stretch",
+        justifyContent: "center"
 
     },
     time: {

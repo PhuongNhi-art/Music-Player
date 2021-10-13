@@ -15,10 +15,11 @@ import { RootTabParamList, RootTabScreenProps } from '../types';
 
 import styles from '../components/PlayerWidget/styles';
 import LibraryScreen from '../screens/LibraryScreen';
-import SongScreen from '../screens/SongScreen';
 import SearchScreen from '../screens/SearchScreen';
 import AlbumScreen from '../screens/AlbumScreen';
 import HomeStacks from './homeStacks';
+import PremiumScreen from '../screens/PremiumScreen';
+
 const BottomTab = createBottomTabNavigator();
 export default function BottomTabNavigator() {
   // const colorScheme = useColorScheme();
@@ -52,7 +53,7 @@ export default function BottomTabNavigator() {
         name="Search"
         component={SearchScreen}
         options={{
-
+          headerShown: false,
           tabBarIcon: ({ color }) => <EvilIcons name="search" size={30} style={{ marginBottom: -3 }} color={color} />,
         }}
       />
@@ -61,15 +62,16 @@ export default function BottomTabNavigator() {
         component={LibraryScreen}
         options={{
           title: 'Library',
-          // headerShown: false,
+          headerShown: false,
           tabBarIcon: ({ color }) => <Ionicons name="md-library-sharp" size={26} style={{ marginBottom: -3 }} color={color} />,
         }}
       />
       <BottomTab.Screen
         name="Premium"
-        component={SongScreen}
+        component={PremiumScreen}
         options={{
           title: 'Premium',
+          headerShown: false,
           tabBarIcon: ({ color }) => <FontAwesome name="spotify" size={28} style={{ marginBottom: -3 }} color={color} />,
         }}
       />

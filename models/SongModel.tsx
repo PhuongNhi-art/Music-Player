@@ -1,3 +1,5 @@
+import Artist from "./ArtistModel";
+
 type Song = {
     _id: string,
     name: string,
@@ -7,7 +9,7 @@ type Song = {
     numberOfLikes : number,
     
     
-    artists: string,
+    idArtist: Artist,
 
 }
 export default Song;

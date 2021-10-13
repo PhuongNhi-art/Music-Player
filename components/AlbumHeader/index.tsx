@@ -24,7 +24,7 @@ const AlbumHeader = (props: AlbumHeaderProps) => {
                 start={{x:1, y:0}}
                 end = {{x:1, y:1}}>
             <View style={{ alignItems: 'center' }}>
-                <ImageBackground source={{ uri: album.imageUri }} style={styles.image}>
+                <ImageBackground source={{ uri: album.imageUri }} style={styles.image} blurRadius={0.5}>
                     <Text style={styles.name} >
                         {album.name}
                     </Text>
