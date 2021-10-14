@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StatusBar, Touchable, Image } from "react-native";
 import { gestureHandlerRootHOC, TouchableOpacity } from "react-native-gesture-handler";
 import styles from "./styles";
@@ -13,8 +13,11 @@ import { Toast } from "native-base";
 import { MaterialIcons } from '@expo/vector-icons';
 import { Sound } from "expo-av/build/Audio";
 import Utils from "../../utils/Utils";
+import { AppContext } from "../../utils/AppContext";
 const PlayerScreen = (props: any) => {
   const songId = props.route.params.song;
+  // console.log('songId', songId);
+  // const { song } = useContext(AppContext);
   const navigation = useNavigation();
   const [dataSong, setDataSong] = useState<Song>();
   const [nextSong, setNextSong] = useState<Song>();
@@ -36,19 +39,16 @@ const PlayerScreen = (props: any) => {
     setPositionTime(status.positionMillis);
   }
   const onPlayNext = async ()=>{
-    if (sound){
-      // setIsPlaying(false);
-      await sound.pauseAsync();
-    }
-    await getSong(nextSong?nextSong?._id:'');
-    // playCurrentSong();
+    
+    
+  
+  await getDifferenceSong((nextSong!=null)?nextSong?._id:'');
+   playCurrentSong();
   }
   const onPlayPrevious = async ()=>{
-    if (sound){
-      await sound.pauseAsync();
-    }
-    await getSong(previousSong?previousSong?._id:'');
-    // playCurrentSong();
+    
+    await getDifferenceSong((previousSong!=null)?previousSong?._id:'');
+    playCurrentSong();
   }
   const goTo = (value: number) => {
     // console.log(value)
@@ -58,8 +58,11 @@ const PlayerScreen = (props: any) => {
     // setPosition(Utils.readTimestamp(value/1000));
   }
   const playCurrentSong = async () => {
+    console.log('play song')
     if (sound) {
-      await sound.unloadAsync()
+      await sound.stopAsync();
+      await sound.unloadAsync();
+      setSound(null);
 
     }
     const { sound: newSound } = await Sound.createAsync(
@@ -94,11 +97,10 @@ const PlayerScreen = (props: any) => {
       await sound.playAsync();
     }
   }
-
-  const getSong = async (id: string) => {
+  const getDifferenceSong = async (song: string) => {
     try {
 
-      const response = await fetch(AppUrl.getByIdSong + "/" + id, {
+      const response = await fetch(AppUrl.getByIdSong + "/" + song, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -110,6 +112,37 @@ const PlayerScreen = (props: any) => {
       if (response.status == 200) {
 
         setDataSong(json['message']);
+        console.log('songId in',dataSong?.name);
+        setPreviousSong(json['previousSong']);
+        setNextSong(json['nextSong']);
+        // console.log('data',dataCategories);
+        console.log('loading song successful');
+        // navigation.navigate('HomeScreen');
+      }
+      else {
+        Toast.show(json['message']);
+        console.log('loading song failed');
+      }
+    } catch (error) {
+
+    }
+  }
+  const getSong = async () => {
+    try {
+
+      const response = await fetch(AppUrl.getByIdSong + "/" + songId, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+      });
+
+      const json = await response.json();
+      if (response.status == 200) {
+
+        setDataSong(json['message']);
+        console.log('songId in',dataSong?.name);
         setPreviousSong(json['previousSong']);
         setNextSong(json['nextSong']);
         // console.log('data',dataCategories);
@@ -142,21 +175,27 @@ const PlayerScreen = (props: any) => {
     // setSound(sound)
 
   }
-  const muteSound = () => {
+  const muteSound = async () => {
     if (sound) {
       setMuted(!muted);
-      sound.setIsMutedAsync(muted);
+      await sound.setIsMutedAsync(muted);
     }
   }
 
   useEffect(() => {
-    getSong(songId);
+    getSong();
     playCurrentSong();
+    // playCurrentSong();
     // getProgress();
     return () => {
 
     }
   }, [])
+  // useEffect(()=>{
+  //   if (dataSong){
+  //     playCurrentSong();
+  //   }
+  // },[dataSong])
   return (
     <View style={{ backgroundColor: '#1A0938', flex: 1 }}>
       <StatusBar barStyle={"light-content"} />
