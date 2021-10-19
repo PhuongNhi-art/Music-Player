@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { StatusBar, Text, View, StyleSheet, Button, TouchableHighlight, Dimensions } from 'react-native';
+import { StatusBar, Text, View, StyleSheet, Button, TouchableHighlight, Dimensions, ScrollView } from 'react-native';
 import Colors from '../constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -8,9 +8,9 @@ const PremiumScreen = () => {
   const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <Ionicons name="arrow-back-outline" size={24} color="white" />
+      {/* <Ionicons name="arrow-back-outline" size={24} color="white" /> */}
       <View style={{ alignItems: 'center', flexDirection: 'column' }}>
         <Text style={styles.textTitle}>Free premium trial for 1 month</Text>
         <View style={{flexDirection: 'row',overflow: 'hidden', borderRadius: 10, height: 130, marginTop: 50}}>
@@ -44,8 +44,8 @@ const windowHeight = Dimensions.get('window').height;
                 </View>
             </View>
       </View>
-
-    </View>
+      <View style={{height: 100}}></View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({

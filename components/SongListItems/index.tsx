@@ -16,8 +16,9 @@ const SongListItem = (props: SongListItemProps) => {
     const [dataSong, setDataSong] = useState<Song>();
     const { song } = props;
     const onPress = () => {
-        
+        // if (song){
         navigation.navigate("PlayerScreen",  {song: song._id });
+        // }
         // navigation.navigate("PlayerScreen");
     }
     const getSong = async() => {

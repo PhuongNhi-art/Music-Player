@@ -61,29 +61,32 @@ const PlayerWidget = () => {
         return position / duration;
     }
     return (
-        <View style={styles.container}>
-            
-            <View style={styles.row}>
-
-                <Image source={{ uri: song.imageUri }} style={styles.image} />
-
-                <View style={styles.rightContainer}>
-                    <View style={styles.nameContainer}>
-                        <Text style={styles.title}>{song.title}</Text>
-                        <Text style={styles.artist}>{song.artist}</Text>
-
-                    </View>
-                    <View style={styles.iconsContainer}>
-                        <TouchableOpacity onPress={onPlayPausePress}>
-                            <FontAwesome name={isPlaying ? 'pause' : 'play'} size={20} color={'white'} />
-                        </TouchableOpacity>
-
-                    </View>
-                </View>
-                </View>
-
-                <View style={[styles.progress, {width: `${getProgress}%`}]}/>
+        <View>
+            <Text>Hello</Text>
         </View>
+        // <View style={styles.container}>
+            
+        //     <View style={styles.row}>
+
+        //         <Image source={{ uri: song.imageUri }} style={styles.image} />
+
+        //         <View style={styles.rightContainer}>
+        //             <View style={styles.nameContainer}>
+        //                 <Text style={styles.title}>{song.title}</Text>
+        //                 <Text style={styles.artist}>{song.artist}</Text>
+
+        //             </View>
+        //             <View style={styles.iconsContainer}>
+        //                 <TouchableOpacity onPress={onPlayPausePress}>
+        //                     <FontAwesome name={isPlaying ? 'pause' : 'play'} size={20} color={'white'} />
+        //                 </TouchableOpacity>
+
+        //             </View>
+        //         </View>
+        //         </View>
+
+        //         <View style={[styles.progress, {width: `${getProgress}%`}]}/>
+        // </View>
         // <View style={styles.container}>
         //     <Image source={{ uri: song.imageUri }} style={styles.image} />
         //     <View style={styles.rightContainer}>

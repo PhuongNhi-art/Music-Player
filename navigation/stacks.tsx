@@ -7,6 +7,7 @@ import AlbumScreen from '../screens/AlbumScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import BottomTabNavigator from './bottomStacks';
 import PlayerScreen from '../screens/PlayerScreen';
+import PlayerWidget from '../components/PlayerWidget';
 
 
 // export type RootStackParamList = {
@@ -45,13 +46,14 @@ const Stacks = () => (
       component={BottomTabNavigator} 
       options={{
         headerShown: false,}}/>
-    <Stack.Screen
+    {/* <Stack.Screen
       name="PlayerScreen"
       component={PlayerScreen}
       options={{
         headerShown: false,
       }}
-    />
+    /> */}
+    
     
   </Stack.Navigator>
 );

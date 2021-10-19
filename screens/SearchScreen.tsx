@@ -1,15 +1,16 @@
 
 
 import * as React from 'react';
-import { StatusBar, Text, View, StyleSheet, ImageBackground, } from 'react-native';
+import { StatusBar, Text, View, StyleSheet, ImageBackground, ScrollView, Touchable, } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { FlatList, TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { FlatList, TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
 import { withTheme } from 'react-native-elements';
 import { useEffect, useState } from 'react';
 import AppUrl from '../utils/AppUrl';
 import { Toast } from 'native-base';
 import Type from '../models/TypeModel';
+import { useNavigation } from '@react-navigation/core';
 
 // const type = [{ name: 'pop', image: 'https://cache.boston.com/resize/bonzai-fba/Globe_Photo/2011/04/14/1302796985_4480/539w.jpg' }, 
 // { name: 'podd' ,image: 'https://cache.boston.com/resize/bonzai-fba/Globe_Photo/2011/04/14/1302796985_4480/539w.jpg'},
@@ -19,6 +20,7 @@ import Type from '../models/TypeModel';
 // const column2Data = type.filter((item, i) => i % 2 === 1);
 const SearchScreen = () => {
   const [dataTypes, setDataTypes] = useState();
+  const navigation = useNavigation();
   const getListTypes = async() => {
     try {
       
@@ -54,15 +56,18 @@ const SearchScreen = () => {
   },[])
   return (
 
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <Text style={styles.text}>Search</Text>
       <View>
-        <View style={styles.search}>
+      
+      <View style={styles.search}>
+        
           <AntDesign name="search1" size={24} color="#A7A7A7" style={styles.icon} />
-          <TextInput placeholder='Song or artist'
+          
+            <TextInput placeholder='Song or artist'
             placeholderTextColor='#A7A7A7' style={styles.placeholder} />
-        </View>
+        </View> 
         <Text style={{ color: 'white', fontSize: 16, padding: 10, margin: 10, fontWeight: 'bold' }}>
           Type hear most</Text>
           <View style={{paddingLeft: 5}}>
@@ -94,8 +99,8 @@ const SearchScreen = () => {
 
         <View></View>
       </View>
-
-    </View>
+      <View style={{height: 100}}></View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({

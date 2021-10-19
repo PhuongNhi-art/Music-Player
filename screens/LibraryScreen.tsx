@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Text, View, StyleSheet, StatusBar, Image, FlatList, ScrollView } from 'react-native';
 import Colors from '../constants/Colors';
 import { AntDesign } from '@expo/vector-icons';
-import { TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { FontAwesome } from '@expo/vector-icons';
 import { round } from 'react-native-reanimated';
 import albumCategory from '../data/albumCategory';
@@ -18,9 +18,12 @@ import { useEffect, useState } from 'react';
 import { Toast } from 'native-base';
 import AppUrl from '../utils/AppUrl';
 import Song from '../models/SongModel';
+import { useNavigation } from '@react-navigation/native';
+
 const LibraryScreen = () => {
   const [dataArtists, setDataArtists] = useState();
   const [dataSongs, setDataSongs] = useState<Array<Song>>([]);
+  const navigation = useNavigation();
   const getListArtist = async() => {
     try {
       
@@ -141,8 +144,10 @@ const LibraryScreen = () => {
                     <Image source={require('../assets/images/logo.png')} style={styles.musicIcon} />
                   </View>
                   <View style={styles.containerSong}>
+                    <TouchableOpacity onPress={()=> navigation.navigate("PlayerScreen",  {song: item._id })}>
                     <Text style={styles.titleSong}>{item.name}</Text>
                     <Text style={styles.artistSong}>{item.idArtist.name}</Text>
+                    </TouchableOpacity>
                   </View>
 
                 </View><AntDesign name="hearto" size={24} color="#ED1BA3" />
@@ -150,6 +155,7 @@ const LibraryScreen = () => {
             );
 
           })}
+          <View style={{height: 80}}></View>
         </ScrollView>
       </View>
       <View style={styles.bottomSection}>

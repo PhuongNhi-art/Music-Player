@@ -3,10 +3,14 @@ const AppUrl = {
     // LOCALHOST: '192.168.1.103:8081',
     LOGIN : 'http://'+LOCALHOST+'/user/login',
     REGISTER : 'http://'+LOCALHOST+'/user/register',
+
     getAllCategories: 'http://'+LOCALHOST+'/category/',
     getAlbumByIdCategory: 'http://'+LOCALHOST+'/category/',
+
     getAllAlbum: 'http://'+LOCALHOST+'/album/',
     getByIdAlbum: 'http://'+LOCALHOST+'/album/',
+    getFirstSong: 'http://'+LOCALHOST+'/album/getfirst',
+
     getByIdSong: 'http://'+LOCALHOST+'/song/',
     getAllTypes: 'http://'+LOCALHOST+'/type/',
     getAllArtists: 'http://'+LOCALHOST+'/artist/',

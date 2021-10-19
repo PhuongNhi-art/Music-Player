@@ -19,6 +19,8 @@ import SearchScreen from '../screens/SearchScreen';
 import AlbumScreen from '../screens/AlbumScreen';
 import HomeStacks from './homeStacks';
 import PremiumScreen from '../screens/PremiumScreen';
+import SearchStacks from './searchStacks';
+import LibraryStacks from './libraryStacks';
 
 const BottomTab = createBottomTabNavigator();
 export default function BottomTabNavigator() {
@@ -51,7 +53,7 @@ export default function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Search"
-        component={SearchScreen}
+        component={SearchStacks}
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => <EvilIcons name="search" size={30} style={{ marginBottom: -3 }} color={color} />,

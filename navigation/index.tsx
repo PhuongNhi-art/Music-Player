@@ -15,7 +15,7 @@ export default function AppNavigator() {
     <NavigationContainer>
       {/* Use TabStacks or Stacks below to display the bottom tabs or not */}
       <Stacks />
-      {/* <PlayerWidget/> */}
+      
       {/* <BottomTabNavigator/> */}
       {/* <TabStacks /> */}
       {/* <PlayerWidget/> */}

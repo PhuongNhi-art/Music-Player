@@ -1,15 +1,29 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import * as React from 'react';
 // import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, SafeAreaViewComponent, StyleSheet, Text, View } from 'react-native';
 import SplashScreen from './screens/SplashScreen';
 import AppNavigator from './navigation';
 import { useState, useMemo} from 'react';
 import { useEffect } from 'react'
 import TrackPlayer from 'react-native-track-player';
 import trackPlayerServices from './services/trackPlayerServices';
+
+
+import { ThemeProvider } from '@shopify/restyle';
+import { theme } from './components/Themed';
+import { Provider } from "react-redux";
+import AudioProvider from './store/AudioProvider';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import PlayerWidget from './components/PlayerWidget';
-import { Provider } from 'react-redux';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getUnloadedStatus } from 'expo-av/build/AV';
+import StorageUtils from './utils/StorageUtils';
+import { AppContext } from './utils/AppContext';
+import Song from './models/SongModel';
+import HomeScreen from './screens/HomeScreen';
+
 // import {Provider} from 'react-redux';
 // import store from './store';
 // const AppRedux = () => {
@@ -47,6 +61,7 @@ const track = [
     "duration": 106
   }
 ]
+
 export default function App()  {
   // const [isLoading, setIsLoading] = useState<boolean>(true);
   // const [userToken, setUserToken] = useState(null);
@@ -59,13 +74,47 @@ export default function App()  {
   //   })();
   
   // }, []);
-
+  // const isLoadingComplete = useCachedResources();
+  const [showPlayer, setShowPlayer] = useState<boolean>(false);
+  const [songId, setSongId] = useState<string>("");
+  const [songName, setSongName] = useState<string>("");
+  const [songArtist, setSongArtist] = useState<string>("");
+  const [songUri, setSongUri] = useState<string>("");
+  const [songImage, setSongImage] = useState<string>("");
+    // console.log(showPlayer); 
+  
+  // useEffect(() => {
+  //   readData()
+  // }, [])
+  
   return (
 
+    <SafeAreaProvider>
+      <AppContext.Provider value={{
+          songId,
+          setSongId: (id: string) => setSongId(id),
 
-   <AppNavigator/>
+          songName,
+          setSongName: (name: string) => setSongName(name),
 
+          songArtist,
+          setSongArtist: (artist: string) => setSongArtist(artist),
+
+          songImage,
+          setSongImage: (image: string) => setSongImage(image),
+
+          songUri,
+          setSongUri: (uri: string) => setSongUri(uri),
+        }}>
+      <AppNavigator/>
+      <PlayerWidget screen={HomeScreen}/>
+      </AppContext.Provider>
+      </SafeAreaProvider>
+   
+   
   );
 }
+
+
 
 

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StatusBar, Touchable, Image } from "react-native";
+import { View, Text, StatusBar, Touchable, Image, PointPropType, Dimensions } from "react-native";
 import { gestureHandlerRootHOC, TouchableOpacity } from "react-native-gesture-handler";
 import styles from "./styles";
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -9,53 +9,71 @@ import PlayButton from "../../components/PlayButton";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Song from "../../models/SongModel";
 import AppUrl from "../../utils/AppUrl";
-import { Toast } from "native-base";
+import { Icon, Toast } from "native-base";
 import { MaterialIcons } from '@expo/vector-icons';
 import { Sound } from "expo-av/build/Audio";
+import { Audio, Video } from 'expo-av';
 import Utils from "../../utils/Utils";
 import { AppContext } from "../../utils/AppContext";
+// import StorageUtils from "../../utils/StorageUtils";
+
 const PlayerScreen = (props: any) => {
-  const songId = props.route.params.song;
+  const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
+  const songIdProps = props.route.params.song;
+
   // console.log('songId', songId);
   // const { song } = useContext(AppContext);
   const navigation = useNavigation();
   const [dataSong, setDataSong] = useState<Song>();
   const [nextSong, setNextSong] = useState<Song>();
   const [previousSong, setPreviousSong] = useState<Song>();
-
+  const [repeat, setRepeat] = useState<string>('repeat-off');
   const [sound, setSound] = useState<Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [duration, setDuration] = useState<string>("0:00");
   const [position, setPosition] = useState<string>("0:00");
   const [durationTime, setDurationTime] = useState<number>(0);
   const [positionTime, setPositionTime] = useState<number>(0);
+  const [scroll, setScroll] = useState<number>(-1);
   const [muted, setMuted] = useState(true)
+  const {songUri, songName, songImage, songId, songArtist,
+     setSongId, setSongArtist, setSongName, setSongUri, setSongImage,} = useContext(AppContext);
+  // const playbackObject = new Audio.Sound();
   const onPlayBackStatusUpdate = (status: any) => {
+    // console.log('postion', status.positionMillis)
     setIsPlaying(status.isPlaying);
     setDuration(Utils.readTimestamp((status.durationMillis - status.positionMillis) / 1000));
+
     setPosition(Utils.readTimestamp(status.positionMillis / 1000));
+    setPositionTime(status.positionMillis);
+
+
     setDurationTime(status.durationMillis);
     // console.log('duration', status.durationMillis);
-    setPositionTime(status.positionMillis);
+
+
   }
-  const onPlayNext = async ()=>{
-    
-    
-  
-  await getDifferenceSong((nextSong!=null)?nextSong?._id:'');
-   playCurrentSong();
+  const onPlayNext = async () => {
+    await getDifferenceSong((nextSong != null) ? nextSong?._id : '');
+    if (sound) {
+      sound.pauseAsync();
+      sound.loadAsync({ uri: (dataSong) ? dataSong.uri : "" }, {}, true)
+      // setSound(null);
+    }
+
+
+
+    //  playCurrentSong();
   }
-  const onPlayPrevious = async ()=>{
-    
-    await getDifferenceSong((previousSong!=null)?previousSong?._id:'');
-    playCurrentSong();
-  }
-  const goTo = (value: number) => {
-    // console.log(value)
-    setPositionTime(value);
-    setPosition(Utils.readTimestamp(value / 1000));
-    // setPositionTime(value/100*durationTime);
-    // setPosition(Utils.readTimestamp(value/1000));
+  const onPlayPrevious = async () => {
+
+    await getDifferenceSong((previousSong != null) ? previousSong?._id : '');
+    if (sound) {
+      sound.pauseAsync();
+      sound.loadAsync({ uri: (dataSong) ? dataSong.uri : "" }, {}, true)
+      // setSound(null);
+    }
   }
   const playCurrentSong = async () => {
     console.log('play song')
@@ -66,22 +84,23 @@ const PlayerScreen = (props: any) => {
 
     }
     const { sound: newSound } = await Sound.createAsync(
-      { uri: (dataSong!=null)?dataSong.uri:""},
+      { uri: (dataSong != null) ? dataSong.uri : "" },
 
       { shouldPlay: isPlaying },
       onPlayBackStatusUpdate,
 
     )
     setSound(newSound)
-  }
-  const getProgress = () => {
-    if (sound === null || durationTime === null || positionTime === null) {
-      return 0;
-    }
-    // console.log('d',(positionTime / durationTime) * 100);
-    return positionTime;
-  }
 
+  }
+  // const playCurrentSong = (song: Song) =>{
+  //   if (sound==null){
+  //   const playbackObj = new Audio.Sound();
+  //   const status = playbackObj.loadAsync({uri: song.uri}, {shouldPlay: isPlaying});
+  //   setSound(status)
+  // }
+
+  //} 
 
   const onPlayPausePress = async () => {
 
@@ -93,8 +112,13 @@ const PlayerScreen = (props: any) => {
       setIsPlaying(!isPlaying);
       await sound.pauseAsync();
     } else {
-      setIsPlaying(!isPlaying);
-      await sound.playAsync();
+      if (durationTime != null && positionTime == durationTime) {
+        // setPositionTime(0);
+        await sound.playFromPositionAsync(0)
+      } else {
+        setIsPlaying(!isPlaying);
+        await sound.playAsync();
+      }
     }
   }
   const getDifferenceSong = async (song: string) => {
@@ -112,11 +136,12 @@ const PlayerScreen = (props: any) => {
       if (response.status == 200) {
 
         setDataSong(json['message']);
-        console.log('songId in',dataSong?.name);
+        console.log('songId in', dataSong?.name);
         setPreviousSong(json['previousSong']);
         setNextSong(json['nextSong']);
         // console.log('data',dataCategories);
         console.log('loading song successful');
+        // playCurrentSong()
         // navigation.navigate('HomeScreen');
       }
       else {
@@ -130,7 +155,7 @@ const PlayerScreen = (props: any) => {
   const getSong = async () => {
     try {
 
-      const response = await fetch(AppUrl.getByIdSong + "/" + songId, {
+      const response = await fetch(AppUrl.getByIdSong + "/" + songIdProps, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -139,10 +164,12 @@ const PlayerScreen = (props: any) => {
       });
 
       const json = await response.json();
+
       if (response.status == 200) {
 
         setDataSong(json['message']);
-        console.log('songId in',dataSong?.name);
+        // await StorageUtils.saveData(StorageUtils.MUSIC, json['message']);
+        // console.log('songId in', dataSong?.name);
         setPreviousSong(json['previousSong']);
         setNextSong(json['nextSong']);
         // console.log('data',dataCategories);
@@ -176,31 +203,143 @@ const PlayerScreen = (props: any) => {
 
   }
   const muteSound = async () => {
+    // console.log(durationTime)
     if (sound) {
       setMuted(!muted);
       await sound.setIsMutedAsync(muted);
     }
   }
+  const listenRepeat = async () => {
+    // console.log('listen repeat', repeat);
+    if (!sound) {
+      return;
+    }
+    if (positionTime == durationTime && durationTime != 0) {
+      switch (repeat) {
+        case "repeat-off": {
 
+          break;
+        }
+        case "repeat": {
+          await sound.replayAsync();
+          break;
+        }
+        case "random": {
+          getDifferenceSong((nextSong != null) ? nextSong?._id : '');
+          // sound.unloadAsync()
+          // if (dataSong)
+          // console.log(dataSong.name)
+          // await sound.playAsync()
+          if (sound) {
+            console.log('load')
+            setIsPlaying(!isPlaying);
+            await sound.stopAsync();
+            await sound.playAsync()
+            // onPlayPausePress();
+          }
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    }
+  }
+  const onRepeat = () => {
+    switch (repeat) {
+      case "repeat-off": {
+        setRepeat('repeat');
+        break;
+      }
+      case "repeat": {
+        setRepeat('random');
+        break;
+      }
+      case "random": {
+        setRepeat('repeat-off');
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
+  const handleSeek = async () => {
+    // console.log('durationTime', durationTime);
+    // console.log('positionTime', positionTime);
+    // console.log('scroll', scroll);
+    // // console.log(value);
+    // console.log('value',scroll*durationTime);
+    if (sound != null && durationTime != 0) {
+      // console.log('move')
+      // await sound.stopAsync();
+      await sound.playFromPositionAsync(scroll * durationTime);
+      setPositionTime(scroll*durationTime/1000)
+      setPosition(Utils.readTimestamp(scroll * durationTime / 1000));
+    }
+  };
+  // const handleSeek = async (value: any) => {
+  //   // console.log('durationTime', durationTime);
+  //   // console.log('positionTime', positionTime);
+  //   // console.log('scroll', scroll);
+  //   // // console.log(value);
+  //   // console.log('value',scroll*durationTime);
+  //   if (sound != null && durationTime != 0) {
+  //     console.log('move')
+  //     // await sound.stopAsync();
+  //     await sound.playFromPositionAsync(value * durationTime);
+  //     setPositionTime(value)
+  //     setPosition(Utils.readTimestamp(value * durationTime / 1000));
+  //   }
+  // };
+  const goBack = async()=>{
+    if (sound!=null){
+      await sound.pauseAsync();
+      // console.log(sound);
+      
+
+    }
+    if (dataSong){
+      setSongId(dataSong._id)
+      setSongUri(dataSong.uri)
+      setSongName(dataSong.name)
+      setSongImage(dataSong.imageUri)
+      setSongArtist(dataSong.idArtist.name)
+    }
+    navigation.goBack()
+    
+    // await StorageUtils.saveData(StorageUtils.SHOW_PLAYER, 'true');
+  }
   useEffect(() => {
     getSong();
-    playCurrentSong();
-    // playCurrentSong();
-    // getProgress();
     return () => {
 
     }
-  }, [])
-  // useEffect(()=>{
-  //   if (dataSong){
-  //     playCurrentSong();
+  },
+    []);
+  useEffect(() => {
+    if (dataSong) {
+
+      playCurrentSong();
+      // listenRepeat();
+    }
+  }, [dataSong])
+  useEffect(() => {
+    listenRepeat();
+  }, [positionTime])
+  // useEffect(() => {
+  //   if (scroll == -1) { return; } else {
+  //     setPosition(Utils.readTimestamp(scroll * 100));
+  //     setPositionTime(scroll * 10000);
+  //     setScroll(-1);
+  //     console.log('scroll', positionTime)
   //   }
-  // },[dataSong])
+  // }, [scroll])
   return (
     <View style={{ backgroundColor: '#1A0938', flex: 1 }}>
       <StatusBar barStyle={"light-content"} />
       <View style={styles.headerSection}>
-        <TouchableOpacity onPress={() => { navigation.goBack() }}>
+        <TouchableOpacity onPress={goBack}>
           <MaterialIcons name="keyboard-arrow-down" size={24} color="#FFFFFF" />
         </TouchableOpacity>
         <Feather name="more-horizontal" size={20} color="#FFFFFF" />
@@ -213,31 +352,61 @@ const PlayerScreen = (props: any) => {
         </View>
       </View>
       <View style={styles.sliderSection}>
-        <Slider
+        <View>
+          <TouchableOpacity onPressOut={handleSeek}>
+            <Slider
+              onValueChange={setScroll}
+              style={{ width: windowWidth * 0.9, height: 40 }}
+              thumbStyle={{ height: 15, width: 15 }}
+              value={positionTime}
+              minimumValue={0}
+              maximumValue={durationTime}
+              minimumTrackTintColor="#ED1BA3"
+              maximumTrackTintColor="#464646"
+              // onSlidingStart={async () => {
+              //   if (!isPlaying) return;
+  
+              //   try {
+              //     await sound?.pauseAsync();
+              //   } catch (error) {
+              //     console.log('error inside onSlidingStart callback', error);
+              //   }
+              // }}
+              // onSlidingComplete={async value => {
+              //   await handleSeek(value)
+              //   setPositionTime(0)
+              // }}
+            />
+            </TouchableOpacity>
+          {/* <Slider
           thumbStyle={{ height: 15, width: 15 }}
+          // onValueChange={handleSeek}
           minimumValue={0}
-          maximumValue={durationTime}
+          // // value={positionTime}
+          // maximumValue={100}
           minimumTrackTintColor="#ED1BA3"
           maximumTrackTintColor="#464646"
           // value={positionTime}
-          value={getProgress()}
-          onValueChange={(value) => goTo(value)}
+        //   value={getProgress()}
+        //   // onValueChange={(value) => goTo(value)}
         //  onSlidingComplete={(value)=>goTo(value)}
 
-        />
-        <View style={styles.time}>
-          <Text style={styles.textTime}>{position}</Text>
-          <Text style={styles.textTime}>{duration}</Text>
-        </View>
-      </View>
+        /> */}
+          <View style={styles.time}>
+            <Text style={styles.textTime}>{position}</Text>
+            <Text style={styles.textTime}>{duration}</Text>
+          </View>
+        </View></View>
       <View style={styles.controlSection}>
-        <TouchableOpacity onPress={reloadSong}>
-          <Feather name="refresh-cw" size={20} color="white" />
+        <TouchableOpacity onPress={onRepeat}>
+          {(repeat === 'repeat-off') || (repeat === 'repeat') ?
+            <MaterialCommunityIcons name={(repeat === 'repeat-off') ? "repeat-off" : "repeat"} size={24} color="white" />
+            : <FontAwesome name="random" size={23} color="white" />}
         </TouchableOpacity>
         <View style={styles.controlContainer}>
           <View style={styles.controlMusic}>
             <TouchableOpacity onPress={onPlayPrevious}>
-            <Ionicons name="play-skip-back-outline" size={20} color="white" style={{ marginLeft: 24 }} />
+              <Ionicons name="play-skip-back-outline" size={20} color="white" style={{ marginLeft: 24 }} />
             </TouchableOpacity>
             <View style={styles.playButton}>
               <TouchableOpacity onPress={onPlayPausePress} >
@@ -245,7 +414,7 @@ const PlayerScreen = (props: any) => {
               </TouchableOpacity>
             </View>
             <TouchableOpacity onPress={onPlayNext}>
-            <Ionicons name="play-skip-forward-outline" size={20} color="white" style={{ marginRight: 24 }} />
+              <Ionicons name="play-skip-forward-outline" size={20} color="white" style={{ marginRight: 24 }} />
             </TouchableOpacity>
           </View>
         </View>

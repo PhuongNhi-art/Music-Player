@@ -84,8 +84,10 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
         renderItem={({ item }) => <AlbumCategoryItem title={item.title} albums={item.albums} _id={item._id} />}
         keyExtractor={(item) => item._id } />
         </View>
-        </ScrollView>
+        <View style={{height: 80}}></View>
         {/* <PlayerWidget/> */}
+        </ScrollView>
+        
     </View>
   );
 }

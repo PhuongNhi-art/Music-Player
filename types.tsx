@@ -25,6 +25,10 @@ export type RootStackParamList = {
   SongScreen: undefined;
   SplashScreen: undefined;
   SignupScreen: undefined;
+  PlayerScreen: undefined;
+  SearchDetailScreen: undefined;
+  TypeScreen: undefined;
+  ArtistScreen: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

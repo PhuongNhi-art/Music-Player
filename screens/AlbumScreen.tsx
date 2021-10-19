@@ -11,6 +11,9 @@ import AppUrl from '../utils/AppUrl';
 import SongListItem from '../components/SongListItems';
 import AlbumHeader from '../components/AlbumHeader';
 import { Album } from '../types';
+import { Ionicons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from "@react-navigation/native";
 // export type AlbumProps = {
 //   album: Album
 
@@ -109,9 +112,11 @@ export default function AlbumScreen(props: any) {
   if (!dataAlbums) {
     return <Text>Loading ...</Text>
   }
+
   return (
    
       <View style={styles.container}>
+        
         {/* <Text style={{color: "white", fontSize: 20}}>Hello{dataAlbums.name}</Text> */}
         <FlatList 
           data = {dataAlbums.songs}
@@ -141,4 +146,8 @@ const styles = StyleSheet.create({
   },
 });
 
+
+function useHistory() {
+  throw new Error('Function not implemented.');
+}
 
