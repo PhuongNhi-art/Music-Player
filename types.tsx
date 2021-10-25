@@ -27,8 +27,13 @@ export type RootStackParamList = {
   SignupScreen: undefined;
   PlayerScreen: undefined;
   SearchDetailScreen: undefined;
+
+  LibraryStacks: NavigatorScreenParams<RootTabParamList> | undefined;
   TypeScreen: undefined;
   ArtistScreen: undefined;
+  InfoScreen: undefined;
+  SigninScreen: undefined;
+  HomeScreen: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -42,6 +47,7 @@ export type RootTabParamList = {
   YourLibrary : undefined;
   Premium: undefined;
   SignupScreen: undefined;
+  PlayerScreen: undefined;
   
   
 };

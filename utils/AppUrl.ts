@@ -1,6 +1,5 @@
-const LOCALHOST = '192.168.1.7:8081';
+const LOCALHOST = '192.168.1.103:8081';
 const AppUrl = {
-    // LOCALHOST: '192.168.1.103:8081',
     LOGIN : 'http://'+LOCALHOST+'/user/login',
     REGISTER : 'http://'+LOCALHOST+'/user/register',
 
@@ -12,8 +11,11 @@ const AppUrl = {
     getFirstSong: 'http://'+LOCALHOST+'/album/getfirst',
 
     getByIdSong: 'http://'+LOCALHOST+'/song/',
+    getAllSongs: 'http://'+LOCALHOST+'/song/',
+    findByText: 'http://'+LOCALHOST+'/song/search',
+
     getAllTypes: 'http://'+LOCALHOST+'/type/',
     getAllArtists: 'http://'+LOCALHOST+'/artist/',
-    getAllSongs: 'http://'+LOCALHOST+'/song/',
+    
 }
 export default AppUrl;

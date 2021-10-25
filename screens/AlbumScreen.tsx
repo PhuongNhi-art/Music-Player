@@ -23,39 +23,6 @@ export default function AlbumScreen(props: any) {
   const albumId = props.route.params.albumId;
   const [dataAlbums, setDataAlbums] = useState();
   
-  // const getAlbums = async() => {
-  //   let message = null;
-  //   try {
-  //     console.log("album",albumId);
-  //     const response = await fetch(AppUrl.getByIdAlbum+"/"+albumId, {
-  //       method: 'GET',
-  //       headers: {
-  //         Accept: 'application/json',
-  //         'Content-Type': 'application/json'
-  //       },
-  //     });
-      
-  //     const json = await response.json();
-  //     // setDataAlbums(json['message']);
-  //     message = json['message'];
-  //     if (response.status==200){
-       
-  //       // setDataAlbums(message);
-  //       //json array
-  //       // console.log(message);
-  //       console.log('dataAlbum',dataAlbums);
-  //       console.log('loading album successful');
-  //       // navigation.navigate('HomeScreen');
-  //     }
-  //     else {
-  //       Toast.show(json['message']);
-  //       console.log('loading album failed');
-  //     }
-  //   } catch (error) {
-      
-  //   }
-  //   return message;
-  // }
   const getAlbums = async() => {
     // let message = null;
     try {

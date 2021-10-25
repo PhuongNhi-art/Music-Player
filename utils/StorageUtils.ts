@@ -3,8 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 class StorageUtils {
   static SHOW_PLAYER = '@show_player';
   static MUSIC = '@music';
+  static USER_EMAIL = '@user_email'
+  static USER_ID = '@user_id';
+  static USER_USERNAME = '@user_username'
   static saveData = async (key: any, value: any) => {
     try {
+      // const jsonValue = JSON.stringify(value)
       await AsyncStorage.setItem(key, value)
       console.log('Data successfully saved')
     } catch (e) {
@@ -14,8 +18,9 @@ class StorageUtils {
 
   static getData = async (key: any) => {
     try {
-      const jsonValue = await AsyncStorage.getItem(key)
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
+      const value = await AsyncStorage.getItem(key)
+      return value != null ? value : null;
+    
     } catch (e) {
       // error reading value
     }

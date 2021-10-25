@@ -19,11 +19,11 @@ import { Toast } from 'native-base';
 import AppUrl from '../utils/AppUrl';
 import Song from '../models/SongModel';
 import { useNavigation } from '@react-navigation/native';
-
+import { StackNavigationProp } from '@react-navigation/stack';
 const LibraryScreen = () => {
   const [dataArtists, setDataArtists] = useState();
   const [dataSongs, setDataSongs] = useState<Array<Song>>([]);
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const getListArtist = async() => {
     try {
       
@@ -86,16 +86,18 @@ const LibraryScreen = () => {
     }
   },[])
   const RenderItem = (props: any) => {
-
+    const {artist} = props;
+    // console.log(artist);
     return (
+      <TouchableOpacity onPress={()=>navigation.navigate('ArtistScreen', {idArtist: artist._id})}>
       <View style={styles.containerItem}>
-        <Image source={{ uri: props.type.imageUri }} style={styles.image} />
+        <Image source={{ uri: artist.imageUri }} style={styles.image} />
         <View style={styles.rightContainer}>
-          <Text style={styles.title}>{props.type.name}</Text>
+          <Text style={styles.title}>{artist.name}</Text>
           {/* <Text style={styles.artist}>{props.albums.title}</Text> */}
         </View>
 
-      </View>
+      </View></TouchableOpacity>
     );
   }
   return (
@@ -123,7 +125,7 @@ const LibraryScreen = () => {
           data={dataArtists}
           horizontal
           showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => <RenderItem type={item} />}
+          renderItem={({ item }) => <RenderItem artist={item} />}
           keyExtractor={(item) => item._id} />
       </View>
 

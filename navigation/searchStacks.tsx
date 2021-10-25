@@ -25,7 +25,10 @@ const SearchStacks = () => (
         name="TypeScreen"
         component={TypeScreen}
         options={{
-          headerShown: false,
+          headerTintColor: 'white',
+          headerTitle: 'Search by type',
+          headerStyle: { backgroundColor: '#150929', }
+          // headerShown: false,
         }}
       />
       

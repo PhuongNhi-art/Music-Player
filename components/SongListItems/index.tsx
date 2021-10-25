@@ -8,11 +8,12 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Toast } from "native-base";
 import AppUrl from "../../utils/AppUrl";
+import { StackNavigationProp } from "@react-navigation/stack";
 export type SongListItemProps = {
     song: Song
 }
 const SongListItem = (props: SongListItemProps) => {
-    const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
     const [dataSong, setDataSong] = useState<Song>();
     const { song } = props;
     const onPress = () => {

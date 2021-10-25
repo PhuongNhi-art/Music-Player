@@ -61,7 +61,7 @@ export default function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="YourLibrary"
-        component={LibraryScreen}
+        component={LibraryStacks}
         options={{
           title: 'Library',
           headerShown: false,

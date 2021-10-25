@@ -13,7 +13,7 @@ import { RootTabScreenProps } from '../types';
 import AlbumItem from '../components/Album/index';
 import AlbumCategoryItem from '../components/AlbumCategory/index';
 import albumCategory from '../data/albumCategory';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, TouchableHighlight } from 'react-native-gesture-handler';
 import {
   Foundation,
   EvilIcons,
@@ -70,10 +70,11 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
       <ScrollView>
         <View>
       <View style={{flexDirection: 'row', margin: 10}}>
-        <Text style={styles.text}>Mới phát gần đây</Text>
+        <Text style={styles.text}>Recently released</Text>
       <View style={styles.iconContainer}>
         <Ionicons name="ios-notifications-outline" style={stylesIcon.icon} />
-        <SimpleLineIcons name="settings" style={stylesIcon.icon} />
+        <TouchableHighlight onPress={()=> navigation.navigate('InfoScreen')}>
+        <SimpleLineIcons name="settings" style={stylesIcon.icon} /></TouchableHighlight>
         <Entypo name="back-in-time" style={stylesIcon.icon} />
       </View></View>
       {/* <AlbumItem album = {album}/> */}

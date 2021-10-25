@@ -11,7 +11,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import {useState} from 'react';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './styles';
 // import Loader from '../../components/Loader';
 import AppUrl from '../../utils/AppUrl';
@@ -19,6 +19,7 @@ import { Entypo } from '@expo/vector-icons';
 import Feather from 'react-native-vector-icons/Feather';
 // import { Toast } from 'native-base';
 import Toast from 'react-native-simple-toast';
+import StorageUtils from '../../utils/StorageUtils';
 const SigninScreen = () => {
   const navigation = useNavigation();
   // const toast = useToast()
@@ -42,9 +43,14 @@ const SigninScreen = () => {
         })
       });
       const json = await response.json();
+      
       if (response.status==200){
-       
+        await StorageUtils.saveData(StorageUtils.USER_USERNAME,'hello');
+        await StorageUtils.saveData(StorageUtils.USER_USERNAME,json['message']['user']['username']);
+        await StorageUtils.saveData(StorageUtils.USER_EMAIL,json['message']['user']['email']);
+        await StorageUtils.saveData(StorageUtils.USER_ID,json['message']['user']['_id']);
           Toast.show('Login success');
+          // console.log(json['message']['user']['username'])
         console.log('login success');
         navigation.navigate('Root');
       }

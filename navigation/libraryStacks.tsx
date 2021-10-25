@@ -20,7 +20,9 @@ const LibraryStacks = () => (
         name="ArtistScreen"
         component={ArtistScreen}
         options={{
-          headerShown: false,
+          headerTintColor: 'white',
+          headerTitle: 'Search by artist',
+          headerStyle: { backgroundColor: '#150929', }
         }}
       />
     

@@ -17,7 +17,7 @@ import Utils from "../../utils/Utils";
 import { AppContext } from "../../utils/AppContext";
 // import StorageUtils from "../../utils/StorageUtils";
 
-const PlayerScreen = (props: any) => {
+function PlayerScreen(props: any)  {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const songIdProps = props.route.params.song;

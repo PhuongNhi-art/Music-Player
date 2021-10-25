@@ -34,6 +34,8 @@
     "react-native-track-player": "^2.1.1",
     "react-native-web": "~0.13.12",
     "react-redux": "^7.2.5",
+    "react-select": "^5.1.0",
+    "react-select-search": "^3.0.8",
     "react-spinners": "^0.11.0",
     "redux": "^4.1.1",
     "redux-thunk": "^2.3.0",

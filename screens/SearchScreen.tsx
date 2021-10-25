@@ -10,7 +10,12 @@ import { useEffect, useState } from 'react';
 import AppUrl from '../utils/AppUrl';
 import { Toast } from 'native-base';
 import Type from '../models/TypeModel';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
+import Artist from '../models/ArtistModel';
+import Song from '../models/SongModel';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+
 
 // const type = [{ name: 'pop', image: 'https://cache.boston.com/resize/bonzai-fba/Globe_Photo/2011/04/14/1302796985_4480/539w.jpg' }, 
 // { name: 'podd' ,image: 'https://cache.boston.com/resize/bonzai-fba/Globe_Photo/2011/04/14/1302796985_4480/539w.jpg'},
@@ -20,10 +25,17 @@ import { useNavigation } from '@react-navigation/core';
 // const column2Data = type.filter((item, i) => i % 2 === 1);
 const SearchScreen = () => {
   const [dataTypes, setDataTypes] = useState();
-  const navigation = useNavigation();
-  const getListTypes = async() => {
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
+  const [searchText, setSearchText] = useState<string>('');
+
+  const [searchSong, setSearchSong] = useState<Array<Song> | null>(null);
+  const [searchArtist, setSearchArtist] = useState<Array<Artist> | null>(null);
+  const [searchFind, setSearchFind] = useState<boolean>(false);
+
+  const getListTypes = async () => {
     try {
-      
+
       const response = await fetch(AppUrl.getAllTypes, {
         method: 'GET',
         headers: {
@@ -31,10 +43,10 @@ const SearchScreen = () => {
           'Content-Type': 'application/json'
         },
       });
-      
+
       const json = await response.json();
-      if (response.status==200){
-       
+      if (response.status == 200) {
+
         setDataTypes(json['message']);
         // console.log('data',dataCategories);
         console.log('loading type successful');
@@ -45,61 +57,84 @@ const SearchScreen = () => {
         console.log('loading type failed');
       }
     } catch (error) {
-      
-    }
-  }
-  useEffect(()=>{
-    getListTypes();
-    return ()=>{
 
     }
-  },[])
+  }
+ 
+  useEffect(() => {
+    getListTypes();
+
+    return () => {
+
+    }
+  }, [])
+  // useEffect(() => {
+  //   findByText(searchText);
+  //   return () => {
+
+  //   }
+  // }, [searchText])
+ 
+
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+  ]
+  
   return (
 
     <ScrollView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <Text style={styles.text}>Search</Text>
       <View>
-      
-      <View style={styles.search}>
-        
+
+        <View style={styles.search}>
+
           <AntDesign name="search1" size={24} color="#A7A7A7" style={styles.icon} />
-          
-            <TextInput placeholder='Song or artist'
+
+          <TextInput placeholder='Song or artist'
+            // onChangeText={(value) => { findByText(value)}}
+           onFocus={()=>navigation.navigate('SearchDetailScreen')}
             placeholderTextColor='#A7A7A7' style={styles.placeholder} />
-        </View> 
+
+        </View>
+         
         <Text style={{ color: 'white', fontSize: 16, padding: 10, margin: 10, fontWeight: 'bold' }}>
           Type hear most</Text>
-          <View style={{paddingLeft: 5}}>
-            <ImageBackground source={{ uri: 'https://www.dropbox.com/s/adi7bi9n8s8d6i5/kpop.jpg?dl=1'}} style={styles.imageItem}
-            imageStyle={{ borderRadius: 6}}>
-                    <Text style={styles.nameItem} >
-                        K-Pop
-                    </Text>
-                </ImageBackground>
-                </View>
-        <Text style={{ color: 'white', fontSize: 16, padding: 10, margin: 10, 
-        fontWeight: 'bold' }}>
+        <View style={{ paddingLeft: 5 }}>
+          <ImageBackground source={{ uri: 'https://www.dropbox.com/s/adi7bi9n8s8d6i5/kpop.jpg?dl=1' }} style={styles.imageItem}
+            imageStyle={{ borderRadius: 6 }}>
+            <Text style={styles.nameItem} >
+              K-Pop
+            </Text>
+          </ImageBackground>
+        </View>
+        <Text style={{
+          color: 'white', fontSize: 16, padding: 10, margin: 10,
+          fontWeight: 'bold'
+        }}>
           Search all</Text>
-          <FlatList
-          style={{paddingLeft: 5}}
+        <FlatList
+          style={{ paddingLeft: 5 }}
           numColumns={2}
           data={dataTypes}
           renderItem={({ item }) => (
+            <TouchableOpacity onPress={()=>navigation.navigate('TypeScreen', {idType: item._id})}>
             <View >
-            <ImageBackground source={{ uri: item.imageUri}} style={styles.imageItem}
-            imageStyle={{ borderRadius: 6}} blurRadius={1}>
-                    <Text style={styles.nameItem} >
-                        {item.name}
-                    </Text>
-                </ImageBackground></View>
+              <ImageBackground source={{ uri: item.imageUri }} style={styles.imageItem}
+                imageStyle={{ borderRadius: 6 }} blurRadius={1}>
+                <Text style={styles.nameItem} >
+                  {item.name}
+                </Text>
+              </ImageBackground></View></TouchableOpacity>
           )}
         />
-        
+
 
         <View></View>
       </View>
-      <View style={{height: 100}}></View>
+      <View style={{ height: 100 }}></View>
     </ScrollView>
   );
 }
@@ -140,11 +175,11 @@ const styles = StyleSheet.create({
     width: 150,
     height: 80,
     margin: 10,
-    
-    justifyContent: 'center'
-},
 
-nameItem: {
+    justifyContent: 'center'
+  },
+
+  nameItem: {
     fontWeight: 'bold',
     color: 'white',
     position: 'absolute', // child
@@ -152,11 +187,12 @@ nameItem: {
     left: 0,
     fontSize: 16,
     padding: 10,
-    textShadowColor: 'black', 
+    textShadowColor: 'black',
     textShadowOffset: { width: -1, height: 0 },
-    textShadowRadius: 15, 
-},
+    textShadowRadius: 15,
+  },
 
 });
+
 export default SearchScreen;
 
