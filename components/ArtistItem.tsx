@@ -2,7 +2,7 @@ import React from "react";
 import { View, Image, Text , TouchableOpacity, StyleSheet} from "react-native";
 import { Feather } from '@expo/vector-icons'; 
 import Artist from "../models/ArtistModel";
-import { useNavigation } from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export type ArtistProps = {

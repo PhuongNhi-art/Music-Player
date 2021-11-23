@@ -27,7 +27,8 @@ const AlbumHeader = (props: AlbumHeaderProps) => {
     // console.log(props.album);
     const { album } = props;
     const [song, setSong] = useState<Song>();
-    const {songUri,setSongId, setSongArtist, setSongName, setSongUri, setSongImage} = useContext(AppContext);
+    const {songUri,setSongId, setSongArtist, setShowPlayer,
+        setSongName, setSongUri, setSongImage} = useContext(AppContext);
     // constructor=()=>{
         
     // }
@@ -39,7 +40,7 @@ const AlbumHeader = (props: AlbumHeaderProps) => {
             setSongId(song._id);
             setSongImage(song.imageUri);
             setSongUri(song.uri);
-           
+            setShowPlayer(true)
             setSongName(song.name);
             setSongArtist(song.idArtist.name);
         }

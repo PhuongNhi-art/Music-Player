@@ -18,15 +18,19 @@ import { useEffect, useState } from 'react';
 import { Toast } from 'native-base';
 import AppUrl from '../utils/AppUrl';
 import Song from '../models/SongModel';
+import * as MediaLibrary from 'expo-media-library';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import * as Permissions from 'expo-permissions';
+import { Camera } from 'expo-camera';
 const LibraryScreen = () => {
   const [dataArtists, setDataArtists] = useState();
   const [dataSongs, setDataSongs] = useState<Array<Song>>([]);
+  const [songLocal, setSongLocal] = useState<Array<any>>([])
   const navigation = useNavigation<StackNavigationProp<any>>();
-  const getListArtist = async() => {
+  const getListArtist = async () => {
     try {
-      
+
       const response = await fetch(AppUrl.getAllArtists, {
         method: 'GET',
         headers: {
@@ -34,10 +38,10 @@ const LibraryScreen = () => {
           'Content-Type': 'application/json'
         },
       });
-      
+
       const json = await response.json();
-      if (response.status==200){
-       
+      if (response.status == 200) {
+
         setDataArtists(json['message']);
         // console.log('data',dataCategories);
         console.log('loading artist successful');
@@ -48,12 +52,47 @@ const LibraryScreen = () => {
         console.log('loading artist failed');
       }
     } catch (error) {
-      
+
     }
   }
-  const getListSong = async() => {
-    try {
+  const getListSongLocal = async ()=>{
+    const {status}= await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    //console.log('res',res);
+    if (status === "granted") {
+      console.log('mediahello');
+      let media = await MediaLibrary.getAssetsAsync({
+        mediaType: 'audio',
+
+      });
       
+      media =
+        await MediaLibrary.getAssetsAsync({
+          mediaType: 'audio',
+          first: media.totalCount,
+
+        });
+        
+      media.assets.forEach(element => {
+        if (element.duration > 60){//lay bai nhac duration 60s
+          //console.log('media', element.duration, element.filename )
+          //songArray.push(element)
+          //setSongLocal(songArray)
+          //songLocal.push(element)
+          setSongLocal(songLocal => [...songLocal, element])
+          //songLocal.push(element)
+          //console.log('media1',element)
+          //console.log('songLocal', songLocal)
+        }
+          //setSongLocal(songLocal => [...songLocal, element])
+          //console.log('local', songLocal)
+      });
+      console.log('media',songLocal)
+
+    }
+  }
+  const getListSong = async () => {
+    try {
+
       const response = await fetch(AppUrl.getAllSongs, {
         method: 'GET',
         headers: {
@@ -61,10 +100,10 @@ const LibraryScreen = () => {
           'Content-Type': 'application/json'
         },
       });
-      
+
       const json = await response.json();
-      if (response.status==200){
-       
+      if (response.status == 200) {
+
         setDataSongs(json['message']);
         // console.log('data',dataCategories);
         console.log('loading artist successful');
@@ -75,44 +114,47 @@ const LibraryScreen = () => {
         console.log('loading artist failed');
       }
     } catch (error) {
-      
+
     }
   }
-  useEffect(()=>{
+  useEffect(() => {
     getListArtist();
-    getListSong();
-    return ()=>{
-
+    console.log('librayry hello');
+    getListSongLocal();
+    //getListSong();
+    return () => {
+      
     }
-  },[])
+  }, [])
+  
   const RenderItem = (props: any) => {
-    const {artist} = props;
+    const { artist } = props;
     // console.log(artist);
     return (
-      <TouchableOpacity onPress={()=>navigation.navigate('ArtistScreen', {idArtist: artist._id})}>
-      <View style={styles.containerItem}>
-        <Image source={{ uri: artist.imageUri }} style={styles.image} />
-        <View style={styles.rightContainer}>
-          <Text style={styles.title}>{artist.name}</Text>
-          {/* <Text style={styles.artist}>{props.albums.title}</Text> */}
-        </View>
+      <TouchableOpacity onPress={() => navigation.navigate('ArtistScreen', { idArtist: artist._id })}>
+        <View style={styles.containerItem}>
+          <Image source={{ uri: artist.imageUri }} style={styles.image} />
+          <View style={styles.rightContainer}>
+            <Text style={styles.title}>{artist.name}</Text>
+            {/* <Text style={styles.artist}>{props.albums.title}</Text> */}
+          </View>
 
-      </View></TouchableOpacity>
+        </View></TouchableOpacity>
     );
   }
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <View style={{flexDirection: 'row'}}>
-      <FontAwesome name="user-circle-o" style={{paddingTop: 10,paddingLeft: 15,}} size={30} color="white" />
-      <Text style={styles.text}>Library</Text>
-      <View style={{flexDirection: 'row', flex: 1, paddingTop: 15,paddingLeft: 15,}}>
-      <Ionicons name="ios-search-outline" size={22} color="white" style={{flex: 1}} />
-      <AntDesign name="plus" size={22} color="white"style={{flex: 1}}  />
-      </View>
+      <View style={{ flexDirection: 'row' }}>
+        <FontAwesome name="user-circle-o" style={{ paddingTop: 10, paddingLeft: 15, }} size={30} color="white" />
+        <Text style={styles.text}>Library</Text>
+        <View style={{ flexDirection: 'row', flex: 1, paddingTop: 15, paddingLeft: 15, }}>
+          <Ionicons name="ios-search-outline" size={22} color="white" style={{ flex: 1 }} />
+          <AntDesign name="plus" size={22} color="white" style={{ flex: 1 }} />
+        </View>
       </View>
       <View>
-        
+
         <View style={styles.titleSection}>
           <Text style={styles.textTitle}>Artists</Text>
           <TouchableWithoutFeedback onPress={() => console.log('Go to Playlist page')}>
@@ -130,7 +172,7 @@ const LibraryScreen = () => {
       </View>
 
       <View style={styles.titleSection}>
-        <Text style={styles.textTitle}>Favorite</Text>
+        <Text style={styles.textTitle}>On device</Text>
         <TouchableWithoutFeedback onPress={() => console.log('Go to Playlist page')}>
           <AntDesign name="right" size={24} color="#22DDF2" />
         </TouchableWithoutFeedback>
@@ -138,7 +180,7 @@ const LibraryScreen = () => {
       <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{}}>
 
-          {dataSongs.map((item, index) => {
+          {songLocal.map((item, index) => {
             return (
               <View style={styles.favoriteItemView} key={index}>
                 <View style={{ flexDirection: 'row' }}>
@@ -146,9 +188,9 @@ const LibraryScreen = () => {
                     <Image source={require('../assets/images/logo.png')} style={styles.musicIcon} />
                   </View>
                   <View style={styles.containerSong}>
-                    <TouchableOpacity onPress={()=> navigation.navigate("PlayerScreen",  {song: item._id })}>
-                    <Text style={styles.titleSong}>{item.name}</Text>
-                    <Text style={styles.artistSong}>{item.idArtist.name}</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("PlayerScreen", { song: -1, uri: item.uri })}>
+                      <Text style={styles.titleSong}>{item.filename.slice(0, -4)}</Text>
+                      {/* <Text style={styles.artistSong}>{item.idArtist.name}</Text> */}
                     </TouchableOpacity>
                   </View>
 
@@ -157,12 +199,12 @@ const LibraryScreen = () => {
             );
 
           })}
-          <View style={{height: 80}}></View>
+          <View style={{ height: 80 }}></View>
         </ScrollView>
       </View>
       <View style={styles.bottomSection}>
         {/* <PlayMusicWidget/> */}
-          {/* <View style={{
+        {/* <View style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignContent: 'center',

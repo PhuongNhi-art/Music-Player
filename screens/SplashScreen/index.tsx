@@ -10,7 +10,7 @@ import {
 import { Image } from 'react-native';
 import styles from './styles';
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import StorageUtils from '../../utils/StorageUtils';
 
@@ -22,7 +22,8 @@ const SplashScreen = () => {
     setEmail(email_value);
     // console.log('email value',email_value)
     // console.log(email)
-    if (email_value!="" && email_value!=null) navigation.navigate('Root');
+    if (email_value!="" && email_value!=null) 
+    navigation.navigate('Root');
   }
   useEffect(() => {
     getUserData();

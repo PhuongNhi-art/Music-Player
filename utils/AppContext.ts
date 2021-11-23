@@ -15,7 +15,10 @@ const context = {
   setSongUri: (uri:  string)=> {},
   
   songImage: "",
-  setSongImage: (image: string)=>{}
+  setSongImage: (image: string)=>{},
+
+  showPlayer: false,
+  setShowPlayer: (show: boolean)=>{}
 }
 
 export const AppContext = React.createContext(context);

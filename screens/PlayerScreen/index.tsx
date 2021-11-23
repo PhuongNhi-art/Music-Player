@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StatusBar, Touchable, Image, PointPropType, Dimensions } from "react-native";
+import { View, Text, StatusBar, Touchable, Image, PointPropType, Dimensions, Easing } from "react-native";
 import { gestureHandlerRootHOC, TouchableOpacity } from "react-native-gesture-handler";
 import styles from "./styles";
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -15,15 +15,15 @@ import { Sound } from "expo-av/build/Audio";
 import { Audio, Video } from 'expo-av';
 import Utils from "../../utils/Utils";
 import { AppContext } from "../../utils/AppContext";
+import { Animated } from 'react-native';
 // import StorageUtils from "../../utils/StorageUtils";
 
-function PlayerScreen(props: any)  {
+function PlayerScreen(props: any) {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const songIdProps = props.route.params.song;
+  const songUriProps = props.route.params.uri;
 
-  // console.log('songId', songId);
-  // const { song } = useContext(AppContext);
   const navigation = useNavigation();
   const [dataSong, setDataSong] = useState<Song>();
   const [nextSong, setNextSong] = useState<Song>();
@@ -37,9 +37,29 @@ function PlayerScreen(props: any)  {
   const [positionTime, setPositionTime] = useState<number>(0);
   const [scroll, setScroll] = useState<number>(-1);
   const [muted, setMuted] = useState(true)
-  const {songUri, songName, songImage, songId, songArtist,
-     setSongId, setSongArtist, setSongName, setSongUri, setSongImage,} = useContext(AppContext);
+  const { songUri, songName, songImage, songId, songArtist, showPlayer, setShowPlayer,
+    setSongId, setSongArtist, setSongName, setSongUri, setSongImage, } = useContext(AppContext);
   // const playbackObject = new Audio.Sound();
+
+  const spinValue = new Animated.Value(0);
+  Animated.loop(
+    Animated.timing(
+      spinValue,
+      {
+        toValue: 1,
+        duration: 6000,
+        easing: Easing.linear, // Easing is an additional import from react-native
+        useNativeDriver: true  // To make use of native driver for performance
+      }
+    )).start()
+  
+
+  // Next, interpolate beginning and end values (in this case 0 and 1)
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg']
+  })
+
   const onPlayBackStatusUpdate = (status: any) => {
     // console.log('postion', status.positionMillis)
     setIsPlaying(status.isPlaying);
@@ -55,24 +75,29 @@ function PlayerScreen(props: any)  {
 
   }
   const onPlayNext = async () => {
-    await getDifferenceSong((nextSong != null) ? nextSong?._id : '');
-    if (sound) {
-      sound.pauseAsync();
-      sound.loadAsync({ uri: (dataSong) ? dataSong.uri : "" }, {}, true)
-      // setSound(null);
+    if (songIdProps != -1) {
+      await getDifferenceSong((nextSong != null) ? nextSong?._id : '');
+      if (sound) {
+        sound.stopAsync();
+        sound.loadAsync({ uri: (dataSong) ? dataSong.uri : "" }, {}, true)
+        //sound.playAsync();
+        // setSound(null);
+      }
     }
+
 
 
 
     //  playCurrentSong();
   }
   const onPlayPrevious = async () => {
-
-    await getDifferenceSong((previousSong != null) ? previousSong?._id : '');
-    if (sound) {
-      sound.pauseAsync();
-      sound.loadAsync({ uri: (dataSong) ? dataSong.uri : "" }, {}, true)
-      // setSound(null);
+    if (songIdProps != -1) {
+      await getDifferenceSong((previousSong != null) ? previousSong?._id : '');
+      if (sound) {
+        sound.stopAsync();
+        sound.loadAsync({ uri: (dataSong) ? dataSong.uri : "" }, {}, true)
+        // setSound(null);
+      }
     }
   }
   const playCurrentSong = async () => {
@@ -83,8 +108,31 @@ function PlayerScreen(props: any)  {
       setSound(null);
 
     }
+
     const { sound: newSound } = await Sound.createAsync(
+
       { uri: (dataSong != null) ? dataSong.uri : "" },
+
+      { shouldPlay: isPlaying },
+      onPlayBackStatusUpdate,
+
+    )
+    setSound(newSound)
+
+  }
+  const playCurrentSongLocal = async () => {
+    console.log('play song')
+    
+    if (sound) {
+      await sound.stopAsync();
+      await sound.unloadAsync();
+      setSound(null);
+
+    }
+
+    const { sound: newSound } = await Sound.createAsync(
+
+      { uri: (songUriProps != null) ? songUriProps : "" },
 
       { shouldPlay: isPlaying },
       onPlayBackStatusUpdate,
@@ -184,24 +232,7 @@ function PlayerScreen(props: any)  {
 
     }
   }
-  const reloadSong = async () => {
-    // await sound.unloadAsync()
-    if (!sound) {
-      return;
-    }
 
-
-    await sound.replayAsync()
-
-    // const { sound: newSound } = await Sound.createAsync(
-    //     { uri:(dataSong?.uri!=null)?dataSong.uri:"https://www.dropbox.com/s/uf38gm3bjm948zu/VayGiu-VuongTinhVanKhongMap-6952041.mp3?dl=1"},
-
-    //     { shouldPlay: isPlaying },
-    //     onPlayBackStatusUpdate
-    // )
-    // setSound(sound)
-
-  }
   const muteSound = async () => {
     // console.log(durationTime)
     if (sound) {
@@ -225,17 +256,13 @@ function PlayerScreen(props: any)  {
           break;
         }
         case "random": {
-          getDifferenceSong((nextSong != null) ? nextSong?._id : '');
-          // sound.unloadAsync()
-          // if (dataSong)
-          // console.log(dataSong.name)
-          // await sound.playAsync()
-          if (sound) {
-            console.log('load')
-            setIsPlaying(!isPlaying);
-            await sound.stopAsync();
-            await sound.playAsync()
-            // onPlayPausePress();
+          if (songIdProps != -1) {
+            await getDifferenceSong((nextSong != null) ? nextSong?._id : '');
+            if (sound) {
+              sound.stopAsync();
+              sound.loadAsync({ uri: (dataSong) ? dataSong.uri : "" }, {}, true)
+              // setSound(null);
+            }
           }
           break;
         }
@@ -274,67 +301,59 @@ function PlayerScreen(props: any)  {
       // console.log('move')
       // await sound.stopAsync();
       await sound.playFromPositionAsync(scroll * durationTime);
-      setPositionTime(scroll*durationTime/1000)
+      setPositionTime(scroll * durationTime / 1000)
       setPosition(Utils.readTimestamp(scroll * durationTime / 1000));
     }
   };
-  // const handleSeek = async (value: any) => {
-  //   // console.log('durationTime', durationTime);
-  //   // console.log('positionTime', positionTime);
-  //   // console.log('scroll', scroll);
-  //   // // console.log(value);
-  //   // console.log('value',scroll*durationTime);
-  //   if (sound != null && durationTime != 0) {
-  //     console.log('move')
-  //     // await sound.stopAsync();
-  //     await sound.playFromPositionAsync(value * durationTime);
-  //     setPositionTime(value)
-  //     setPosition(Utils.readTimestamp(value * durationTime / 1000));
-  //   }
-  // };
-  const goBack = async()=>{
-    if (sound!=null){
+  const goBack = async () => {
+    if (sound != null) {
+      //setShowPlayer(true);
       await sound.pauseAsync();
       // console.log(sound);
-      
+
 
     }
-    if (dataSong){
+    if (dataSong) {
       setSongId(dataSong._id)
       setSongUri(dataSong.uri)
       setSongName(dataSong.name)
       setSongImage(dataSong.imageUri)
       setSongArtist(dataSong.idArtist.name)
+      setShowPlayer(true)
     }
     navigation.goBack()
-    
+
     // await StorageUtils.saveData(StorageUtils.SHOW_PLAYER, 'true');
   }
   useEffect(() => {
+    setShowPlayer(false)
     getSong();
+    
     return () => {
 
     }
   },
     []);
   useEffect(() => {
-    if (dataSong) {
+    if (dataSong && songIdProps != -1) {
 
       playCurrentSong();
       // listenRepeat();
+    } else if (songIdProps == -1) {
+      playCurrentSongLocal();
     }
   }, [dataSong])
+  // useEffect(() => {
+  //   if (songIdProps==-1){
+  //     playCurrentSongLocal();
+  //   }
+  // }, [songUriProps])
   useEffect(() => {
     listenRepeat();
   }, [positionTime])
-  // useEffect(() => {
-  //   if (scroll == -1) { return; } else {
-  //     setPosition(Utils.readTimestamp(scroll * 100));
-  //     setPositionTime(scroll * 10000);
-  //     setScroll(-1);
-  //     console.log('scroll', positionTime)
-  //   }
-  // }, [scroll])
+  
+  
+
   return (
     <View style={{ backgroundColor: '#1A0938', flex: 1 }}>
       <StatusBar barStyle={"light-content"} />
@@ -345,7 +364,10 @@ function PlayerScreen(props: any)  {
         <Feather name="more-horizontal" size={20} color="#FFFFFF" />
       </View>
       <View style={styles.musicSection}>
-        <Image source={{ uri: dataSong?.imageUri }} style={styles.imagePlayer} />
+
+        <Animated.Image
+          style={[styles.imagePlayer, { transform: [{ rotate: spin }] }]} source={{ uri: (songIdProps != -1) ? dataSong?.imageUri : "https://www.dropbox.com/s/5ilwxklgybfvsec/music.jpg?dl=1" }} />
+
         <View style={styles.containerTitle}>
           <Text style={styles.textTitle}>{dataSong?.name}</Text>
           <Text style={styles.textArtist}>{dataSong?.idArtist.name}</Text>
@@ -363,21 +385,21 @@ function PlayerScreen(props: any)  {
               maximumValue={durationTime}
               minimumTrackTintColor="#ED1BA3"
               maximumTrackTintColor="#464646"
-              // onSlidingStart={async () => {
-              //   if (!isPlaying) return;
-  
-              //   try {
-              //     await sound?.pauseAsync();
-              //   } catch (error) {
-              //     console.log('error inside onSlidingStart callback', error);
-              //   }
-              // }}
-              // onSlidingComplete={async value => {
-              //   await handleSeek(value)
-              //   setPositionTime(0)
-              // }}
+            // onSlidingStart={async () => {
+            //   if (!isPlaying) return;
+
+            //   try {
+            //     await sound?.pauseAsync();
+            //   } catch (error) {
+            //     console.log('error inside onSlidingStart callback', error);
+            //   }
+            // }}
+            // onSlidingComplete={async value => {
+            //   await handleSeek(value)
+            //   setPositionTime(0)
+            // }}
             />
-            </TouchableOpacity>
+          </TouchableOpacity>
           {/* <Slider
           thumbStyle={{ height: 15, width: 15 }}
           // onValueChange={handleSeek}

@@ -105,15 +105,20 @@ export default function App()  {
 
           songUri,
           setSongUri: (uri: string) => setSongUri(uri),
+
+          showPlayer,
+          setShowPlayer: (show:boolean)=> setShowPlayer(show)
         }}>
       <AppNavigator/>
-      <PlayerWidget screen={HomeScreen}/>
+      <PlayerWidget/>
       </AppContext.Provider>
       </SafeAreaProvider>
    
    
   );
 }
+
+
 
 
 

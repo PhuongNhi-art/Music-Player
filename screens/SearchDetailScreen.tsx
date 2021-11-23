@@ -120,7 +120,7 @@ const SearchDetailScreen = () => {
               keyExtractor = {(item)=> item._id}
             />:<View></View>}
            
-           </ScrollView></View>}
+           </ScrollView><View style={{height: 80}}></View></View>}
         </View>
     )
 }

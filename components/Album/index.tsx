@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import styles from './styles';
 import { Album } from '../../types';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import AlbumScreen from '../../screens/AlbumScreen';
 import { StackNavigationProp } from '@react-navigation/stack';
 export type AlbumProps = {

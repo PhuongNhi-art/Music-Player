@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class StorageUtils {
-  static SHOW_PLAYER = '@show_player';
   static MUSIC = '@music';
   static USER_EMAIL = '@user_email'
   static USER_ID = '@user_id';

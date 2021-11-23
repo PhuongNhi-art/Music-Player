@@ -54,6 +54,17 @@ const HomeStacks = () => (
         headerStyle: { backgroundColor: '#150929',}
       }}
     />
+    {/* <Stack.Screen
+      name="PlayerWidget"
+      component={PlayerWidget}
+      options={{
+        // headerShown: false,
+        // headerShown: false,
+        headerTintColor: 'white',
+        
+        headerStyle: { backgroundColor: '#150929',}
+      }}
+    /> */}
     
   </Stack.Navigator>
 );
