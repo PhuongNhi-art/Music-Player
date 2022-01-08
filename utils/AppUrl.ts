@@ -1,4 +1,4 @@
-const LOCALHOST = '192.168.1.2:8081';
+const LOCALHOST = '192.168.1.7:8081';
 const AppUrl = {
     LOGIN : 'http://'+LOCALHOST+'/user/login',
     REGISTER : 'http://'+LOCALHOST+'/user/register',

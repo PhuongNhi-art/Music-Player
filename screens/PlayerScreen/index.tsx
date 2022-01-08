@@ -41,24 +41,24 @@ function PlayerScreen(props: any) {
     setSongId, setSongArtist, setSongName, setSongUri, setSongImage, } = useContext(AppContext);
   // const playbackObject = new Audio.Sound();
 
-  const spinValue = new Animated.Value(0);
-  Animated.loop(
-    Animated.timing(
-      spinValue,
-      {
-        toValue: 1,
-        duration: 6000,
-        easing: Easing.linear, // Easing is an additional import from react-native
-        useNativeDriver: true  // To make use of native driver for performance
-      }
-    )).start()
+  //const spinValue = new Animated.Value(0);
+  // Animated.loop(
+  //   Animated.timing(
+  //     spinValue,
+  //     {
+  //       toValue: 1,
+  //       duration: 6000,
+  //       easing: Easing.linear, // Easing is an additional import from react-native
+  //       useNativeDriver: true  // To make use of native driver for performance
+  //     }
+  //   )).start()
   
 
-  // Next, interpolate beginning and end values (in this case 0 and 1)
-  const spin = spinValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg']
-  })
+  // // Next, interpolate beginning and end values (in this case 0 and 1)
+  // const spin = spinValue.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: ['0deg', '360deg']
+  // })
 
   const onPlayBackStatusUpdate = (status: any) => {
     // console.log('postion', status.positionMillis)
@@ -365,9 +365,9 @@ function PlayerScreen(props: any) {
       </View>
       <View style={styles.musicSection}>
 
-        <Animated.Image
-          style={[styles.imagePlayer, { transform: [{ rotate: spin }] }]} source={{ uri: (songIdProps != -1) ? dataSong?.imageUri : "https://www.dropbox.com/s/5ilwxklgybfvsec/music.jpg?dl=1" }} />
-
+        {/* <Animated.Image 
+          style={[styles.imagePlayer, { transform: [{ rotate: spin }] }]} source={{ uri: (songIdProps != -1) ? dataSong?.imageUri : "https://www.dropbox.com/s/5ilwxklgybfvsec/music.jpg?dl=1" }} /> */}
+<Image source={{ uri: (songIdProps != -1) ? dataSong?.imageUri : "https://www.dropbox.com/s/5ilwxklgybfvsec/music.jpg?dl=1"}} style={styles.imagePlayer}/>
         <View style={styles.containerTitle}>
           <Text style={styles.textTitle}>{dataSong?.name}</Text>
           <Text style={styles.textArtist}>{dataSong?.idArtist.name}</Text>
